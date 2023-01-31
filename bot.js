@@ -31,6 +31,8 @@ client.on("messageCreate", (msg) => {
         if (msg.content.startsWith("~vote ")) {
             const splt = msg.content.split(" ");
             if ((splt[1]) == "kick") {
+                var initLogData = ess.timeAndUInfoLog(ess, msg, console);
+                fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
                 if (msg.mentions.everyone == false && msg.mentions.users.first()) {
                     const candite = msg.mentions.users.first();
                     var resp = msg.channel.send("<@everyone>\n__**Kick Member Vote**__\n \n<@${msg.author.id}> has called a vote to kick <@msg.mentions.users.first().id>\n \nTo vote `Yes`, react with :white_check_mark:\nOtherwise, do not vote. If 2/3 of the server chooses `Yes`, the user will be kicked.\nIf that number is not reached within 12 hours, the vote will be cancelled.");
@@ -46,6 +48,8 @@ client.on("messageCreate", (msg) => {
                 }
             }
             if ((splt[1]) == "ban") {
+                var initLogData = ess.timeAndUInfoLog(ess, msg, console);
+                fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
                 if (msg.mentions.everyone == false && msg.mentions.users.first()) {
                     const candite = msg.mentions.users.first();
                     var resp = msg.channel.send("<@everyone>\n__**Ban Member Vote**__\n \n<@${msg.author.id}> has called a vote to ban <@msg.mentions.users.first().id>\n \nTo vote `Yes`, react with :white_check_mark:\nOtherwise, do not vote. If 2/3 of the server chooses `Yes`, the user will be banned.\nIf that number is not reached within 12 hours, the vote will be cancelled.");

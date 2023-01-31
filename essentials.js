@@ -31,6 +31,7 @@ exports.timeAndUInfoLog = function(ess, msg, console) {
     const ttm = ess.haveTime();
     const initLogData = "[DATE: "+ttm.date+" "+ttm.time+"] ("+msg.author.username+"#"+msg.author.discriminator+" & "+msg.author.id+")"+"\n"+msg.content+"\n";
     console.log(initLogData);
+    return initLogData;
 }
 
 exports.guildFlash = function(gid) {
