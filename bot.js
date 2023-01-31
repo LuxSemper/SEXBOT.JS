@@ -32,8 +32,32 @@ client.on("messageCreate", (msg) => {
             const splt = msg.content.split(" ");
             if ((splt[1]) == "kick") {
                 if (msg.mentions.everyone == false && msg.mentions.users.first()) {
+                    const candite = msg.mentions.users.first();
                     var resp = msg.channel.send("<@everyone>\n__**Kick Member Vote**__\n \n<@${msg.author.id}> has called a vote to kick <@msg.mentions.users.first().id>\n \nTo vote `Yes`, react with :white_check_mark:\nOtherwise, do not vote. If 2/3 of the server chooses `Yes`, the user will be kicked.\nIf that number is not reached within 12 hours, the vote will be cancelled.");
-                    msg.react("✅");
+                    resp.react("✅");
+                    const tm = setTimeout(
+                        function() {
+                            if (!resp) { return; }
+                            if (Math.floor(msg.guild.memberCount*(2/3)) <= msg.reactions.cache.size-1) {
+                                msg.guild.members.kick(candite);
+                            }
+                        }, 43200000
+                    );
+                }
+            }
+            if ((splt[1]) == "ban") {
+                if (msg.mentions.everyone == false && msg.mentions.users.first()) {
+                    const candite = msg.mentions.users.first();
+                    var resp = msg.channel.send("<@everyone>\n__**Ban Member Vote**__\n \n<@${msg.author.id}> has called a vote to ban <@msg.mentions.users.first().id>\n \nTo vote `Yes`, react with :white_check_mark:\nOtherwise, do not vote. If 2/3 of the server chooses `Yes`, the user will be banned.\nIf that number is not reached within 12 hours, the vote will be cancelled.");
+                    resp.react("✅");
+                    const tm = setTimeout(
+                        function() {
+                            if (!resp) { return; }
+                            if (Math.floor(msg.guild.memberCount*(2/3)) <= msg.reactions.cache.size-1) {
+                                msg.guild.members.ban(candite);
+                            }
+                        }, 43200000
+                    );
                 }
             }
         }
