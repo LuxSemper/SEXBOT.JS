@@ -112,6 +112,7 @@ client.on("messageCreate", async (msg) => {
         if (msg.content.startsWith("~vote ")) {
             if (msg.guild.ownerId != client.user.id) {
                 msg.reply("N-nya? Master, it appears I'm less dominant in these circumstances... o///o");
+                return;
             }
             const splt = msg.content.split(" ");
             if ((splt[1]) == "kick") {
@@ -165,6 +166,7 @@ client.on("messageCreate", async (msg) => {
         if (msg.content.startsWith("~logfile")) {
             if (msg.guild.ownerId != client.user.id) {
                 msg.reply("N-nya? Master, it appears I'm less dominant in these circumstances... o///o");
+                return;
             }
             //set to only work for administrators, but ig that shit isn't gonna work lmfao
             if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
