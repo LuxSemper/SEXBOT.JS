@@ -1,5 +1,7 @@
+const { table } = require("console");
 const Discord = require("discord.js");
-const { fchmod } = require("fs");
+const fs = require("fs");
+ess = exports;
 
 exports.sets = {
     untouchable: ["1009101322680795268", "919666443988119563"],
@@ -9,6 +11,204 @@ exports.sets = {
 exports.crash = function(client) {
     client.user.setStatus("dnd");
     const tm = setTimeout(function() { client.user.setStatus("online"); }, 500);
+}
+
+exports.items = {
+    pistol:{name:"Pistol",price:250,usable:true,description:"A thing used to make threats and shoot shit."},
+    amongplush:{name:"Among Us Plushie",price:50,usable:false,description:"The SUSSY imposter at 3 AM???"},
+    nword:{name:"N-Word Pass",price:5000,usable:true,description:"The sole artifact sought by many."},
+    arrow:{name:"Strange Arrow",price:1000,usable:true,description:"HOLY FUCKING SHIT IS THAT A MOTHERFUCKING JOJO REFERENCE?!"},
+    rope:{name:"Rope",price:25,usable:true,description:"Uses include: hanging yourself, hanging your friends, and tying up femboys to prevent their escape attempts."},
+    armband:{name:"MMR Armband",price:750,usable:true,description:"Contains a needle meant to inject a strange liquid mixture into one's blood."},
+    flask:{name:"Flask",price:10,usable:true,description:"Used to contain... \"liquids\"."},
+    guysex:{name:"Guyshit Sextape",price:5,usable:false,description:"Full sextape featuring Guyshit and his friends."},
+    trophy:{name:"Best Sex Trophy",price:10000,usable:false,description:"The sexiest living being award."},
+    cyanide:{name:"Cyanide Pill",price:100,usable:true,description:"Poison yourself or your dumbass friends within seconds."},
+    gamephone:{name:"Gaming Cellphone",price:4200,usable:true,description:"Cellphone made specifically for Subway Surfers."},
+    plug:{name:"Buttplug",price:69,usable:true,description:"Prevents impregnation if male."},
+    totem:{name:"Totem Of Undying",price:6400,usable:false,description:"Prevents death, consumed on activation."},
+    cross:{name:"Holy Cross",price:440,usable:true,description:"Protection from some forms of heresey. Decreases taken damage. Must be used. Cannot be consumed."},
+    mummy:{name:"Mummified Body",price:250000,usable:false,description:"Some dead fucker who walked all the way from Africa to America lmfao."}
+};
+
+exports.lsts = [
+    [
+        ess.items.pistol,
+        ess.items.amongplush,
+        ess.items.nword,
+        ess.items.arrow,
+        ess.items.rope,
+        ess.items.armband,
+    ],
+    [
+        ess.items.flask,
+        ess.items.guysex,
+        ess.items.trophy,
+        ess.items.cyanide,
+        ess.items.gamephone,
+        ess.items.plug
+    ],
+    [
+        ess.items.totem,
+        ess.items.cross,
+        ess.items.mummy
+    ]
+];
+
+exports.shopItemsString = function(ess, pagenum, msg) {
+    console.log("ran");
+    const lst = ess.lsts[pagenum];
+    var str = "";
+    for (const i in lst) {
+        str = str.concat("\n`"+lst[i].name+"` - $"+lst[i].price.toString());
+    }
+    return str;
+}
+
+exports.dataTemplate = {
+    uid:"",
+    inv:[
+        {item:{},count:0}
+    ],
+    money:0,
+    scores: {
+        highestSex:0,
+        exp:0
+    }
+}
+
+exports.getUdata = function(id) {
+    const dat = fs.readFileSync("./udata/data.txt", "utf-8");
+    var udat = JSON.parse(dat);
+        var data;
+        for (const i in udat[0].userData) {
+            console.log("ran");
+            if (udat[0].userData[i]) {
+                if (udat[0].userData[i].uid == id) {
+                    console.log("Data found for "+id);
+                    data = udat[0].userData[i];
+                    break;
+                }
+            } else {
+                console.log("No data in file");
+                var obj = exports.dataTemplate;
+                obj.uid = id;
+                obj.inv = [];
+                udat[0].userData.push(obj);
+                fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+                data = obj;
+                break;
+            }
+        }
+        if (!data) {
+            console.log("No data for "+id);
+            var obj = exports.dataTemplate;
+            obj.uid = id;
+            obj.inv = [];
+            udat[0].userData.push(obj);
+            fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+            data = obj;
+        }
+        console.log("Data collected from "+id);
+        return data;
+}
+
+exports.setUdata = function(id, newData) {
+    const dat = fs.readFileSync("./udata/data.txt", "utf-8");
+    var udat = JSON.parse(dat);
+    var data;
+    var int;
+    for (const i in udat[0].userData) {
+        console.log("ran");
+        if (udat[0].userData[i]) {
+            if (udat[0].userData[i].uid == id) {
+                console.log("Data found for "+id);
+                data = udat[0].userData[i];
+                int = i;
+                break;
+            }
+        } else {
+            console.log("No data in file");
+            var obj = exports.dataTemplate;
+            obj.uid = id;
+            obj.inv = [];
+            udat[0].userData.push(obj);
+            fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+            data = obj;
+            break;
+        }
+    }
+    if (!data) {
+        console.log("No data for "+id);
+        var obj = exports.dataTemplate;
+        obj.uid = id;
+        obj.inv = [];
+        udat[0].userData.push(obj);
+        fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+        data = obj;
+    }
+    newData.uid = id;
+    udat[0].userData[int] = newData;
+    fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+}
+
+exports.findItem = function(inv, itm) {
+    for (const i in inv) {
+        if (inv) {
+            if (inv[i].item.name == itm.name) {
+                return i;
+            }
+        }
+    }
+}
+
+exports.buyItem = function(ess, id, page, obj, msg) {
+    const lst = ess.lsts[parseInt(page)-1];
+    if (lst) {
+        const itm = lst[parseInt(obj)-1];
+        if (itm) {
+            var udat = ess.getUdata(id);
+            if (udat.money >= itm.price) {
+                udat.money = udat.money - itm.price;
+                const iter = ess.findItem(udat.inv, itm);
+                if (iter == (0 || 1 || 2)) {
+                    udat.inv[iter].count = udat.inv[iter].count + 1;
+                    ess.setUdata(id, udat);
+                    msg.reply("Purchased one ".concat(itm.name+"."));
+                    return;
+                } else {
+                    udat.inv.push({item:itm,count:1});
+                    ess.setUdata(id, udat);
+                    msg.reply("Purchased one ".concat(itm.name+"."));
+                    return;
+                }
+            } else {
+                msg.reply("Item too costly: > "+udat.money);
+                return;
+            }
+        }
+    }
+    msg.reply("Purchasing items: `~buy [page:int] [item:int]`.");
+}
+
+exports.getBal = function(id, msg) {
+    console.log(id);
+    var udat = ess.getUdata(id);
+    if (udat.money) {
+        return udat.money;
+    }
+    msg.reply("Balance: `~balance [@user:optional]`.");
+}
+
+exports.getItemInfo = function(ess, page, itid, msg) {
+    const lst = ess.lsts[page];
+    if (lst) {
+        const itm = lst[itid];
+        if (itm) {
+            return ("**Name:** "+itm.name+"\n**Price:** $"+itm.price+"\n**Description:** "+itm.description+"\n**Usable:** "+itm.usable);
+        }
+    }
+    msg.reply("Getting item information: `~info [page:int] [item:int]`.");
 }
 
 exports.isBot = function(users) {
@@ -35,7 +235,6 @@ exports.timeAndUInfoLog = function(ess, msg, console) {
 }
 
 exports.guildFlash = function(gid) {
-
 }
 
 exports.locateFlashable = function(users, members, sets) {
