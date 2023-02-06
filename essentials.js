@@ -1,7 +1,7 @@
 const { table } = require("console");
 const Discord = require("discord.js");
 const fs = require("fs");
-ess = exports;
+const ess = exports;
 
 exports.sets = {
     untouchable: ["1009101322680795268", "919666443988119563"],
@@ -31,6 +31,18 @@ exports.items = {
     mummy:{name:"Mummified Body",price:250000,usable:false,description:"Some dead fucker who walked all the way from Africa to America lmfao."}
 };
 
+exports.jobs = {
+    femboy:{name:"Femboy",wage:45,difficulty:3,consec_fails_allowed:2,exp_req:750,exp_get:10},
+    cashier:{name:"Cashier", wage:20,difficulty:2,consec_fails_allowed:3,exp_req:250,exp_get:5},
+    crewmate:{name:"Crewmate", wage:17,difficulty:4,consec_fails_allowed:1,exp_req:25,exp_get:7},
+    janitor:{name:"Janitor", wage:12,difficulty:1,consec_fails_allowed:4,exp_req:50,exp_get:2},
+    journalist:{name:"Journalist", wage:1,difficulty:5,consec_fails_allowed:0,exp_req:0,exp_get:1},
+    nftseller:{name:"NFT Seller", wage:50,difficulty:4,consec_fails_allowed:1,exp_req:1000,exp_get:15},
+    minecrafter:{name:"Minecrafter", wage:40,difficulty:3,consec_fails_allowed:2,exp_req:100,exp_get:8},
+    imposter:{name:"Imposter", wage:32,difficulty:4,consec_fails_allowed:1,exp_req:500,exp_get:11},
+    federalagent:{name:"Federal Agent", wage:10,difficulty:2,consec_fails_allowed:3,exp_req:10,exp_get:3},
+};
+
 exports.lsts = [
     [
         ess.items.pistol,
@@ -52,6 +64,22 @@ exports.lsts = [
         ess.items.totem,
         ess.items.cross,
         ess.items.mummy
+    ]
+];
+
+exports.jlsts = [
+    [
+        ess.jobs.cashier,
+        ess.jobs.crewmate,
+        ess.jobs.federalagent,
+        ess.jobs.femboy,
+        ess.jobs.imposter,
+        ess.jobs.janitor
+    ],
+    [
+        ess.jobs.journalist,
+        ess.jobs.minecrafter,
+        ess.jobs.nftseller
     ]
 ];
 
@@ -209,6 +237,22 @@ exports.getItemInfo = function(ess, page, itid, msg) {
         }
     }
     msg.reply("Getting item information: `~info [page:int] [item:int]`.");
+}
+
+exports.addMoney = function(id, amt) {
+    var udat = ess.getUdata(id);
+    udat.money = udat.money + amt;
+    ess.setUdata(id, udat);
+}
+
+exports.workJob = function(id, page, job, msg) {
+    const lst = ess.jlsts[page];
+    if (lst) {
+        const res = lst[job];
+        if (res) {
+            return ((Math.floor(Math.random()*res.difficulty)+1)<res.difficulty);
+        }
+    }
 }
 
 exports.isBot = function(users) {
