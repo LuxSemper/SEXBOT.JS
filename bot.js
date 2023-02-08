@@ -100,11 +100,11 @@ client.on("messageCreate", async (msg) => {
             }
             msg.reply("Wilkommen! Use an integer `(1-2)` to select the job page.");
         }
-        if (msg.content.toLowerCase().startsWith('~buy')) {
+        if (msg.content.toLowerCase().startsWith('~buy ')) {
             const splt = msg.content.split(" ");
             ess.buyItem(ess, msg.author.id, splt[1], splt[2], msg);
         }
-        if (msg.content.toLowerCase().startsWith('~info')) {
+        if (msg.content.toLowerCase().startsWith('~info ')) {
             const splt = msg.content.split(" ");
             var ssm = "Getting information: `~info [(job/item)] [page:int] [obj:int]`.";
             if (splt[1] == "item") {
@@ -115,6 +115,18 @@ client.on("messageCreate", async (msg) => {
             }
             if (ssm) {
                 msg.reply(ssm);
+            }
+        }
+        if (msg.content.toLowerCase().startsWith('~job ')) {
+            const splt = msg.content.split(" ");
+            if (splt[1] == "apply") {
+                ess.jobApply(msg.author.id, parseInt(splt[2]), parseInt(splt[3]), msg);
+            }
+            if (splt[1] == "quit") {
+                ess.jobQuit(msg.author.id, msg);
+            }
+            if (splt[1] == "work") {
+                ess.workJob(msg.author.id, msg);
             }
         }
         if (msg.content.toLowerCase().startsWith('~balance')) {
@@ -133,6 +145,24 @@ client.on("messageCreate", async (msg) => {
                 }
                 msg.reply("User <@"+msg.author.id+"> has $"+mon);
                 console.log("Balance got "+msg.author.id);
+            }
+        }
+        if (msg.content.toLowerCase().startsWith('~xp')) {
+            const usr = msg.mentions.users.first();
+            if (usr) {
+                const mon = ess.getXP(usr.id);
+                if (!mon) {
+                    return;
+                }
+                msg.reply("User <@"+usr.id+"> has "+mon+" XP");
+                console.log("XP got "+usr.id);
+            } else {
+                const mon = ess.getXP(msg.author.id);
+                if (!mon) {
+                    return;
+                }
+                msg.reply("User <@"+msg.author.id+"> has "+mon+" XP");
+                console.log("XP got "+msg.author.id);
             }
         }
         if (msg.content.toLowerCase().startsWith('~help')) {

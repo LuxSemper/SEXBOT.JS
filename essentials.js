@@ -92,13 +92,22 @@ exports.shopItemsString = function(ess, pagenum, msg) {
     return str;
 }
 
+exports.jobsString = function(ess, pagenum) {
+    const lst = ess.jlsts[pagenum];
+    var str = "";
+    for (const i in lst) {
+        str = str.concat("\n`"+lst[i].name+"` - Required "+lst[i].exp_req.toString()+" XP");
+    }
+    return str;
+}
+
 exports.dataTemplate = {
     uid:"",
     inv:[
         {item:{},count:0}
     ],
     money:0,
-    job:{},
+    job:null,
     scores: {
         highestSex:0,
         exp:0
@@ -228,6 +237,15 @@ exports.getBal = function(id, msg) {
     msg.reply("Balance: `~balance [@user:optional]`.");
 }
 
+exports.getXP = function(id, msg) {
+    console.log(id);
+    var udat = ess.getUdata(id);
+    if (udat.scores.exp) {
+        return udat.scores.exp;
+    }
+    msg.reply("XP: `~xp [@user:optional]`.");
+}
+
 exports.getItemInfo = function(ess, page, itid, msg) {
     const lst = ess.lsts[page];
     if (lst) {
@@ -250,29 +268,81 @@ exports.getJobInfo = function(ess, page, itid, msg) {
     msg.reply("Getting job information: `~info job [page:int] [job:int]`.");
 }
 
-exports.addMoney = function(id, amt) {
+exports.addMoneyAndXP = function(id, amt, atm) {
     var udat = ess.getUdata(id);
     udat.money = udat.money + amt;
+    udat.scores.exp = udat.scores.exp + atm;
     ess.setUdata(id, udat);
 }
 
-exports.workJob = function(id, page, job, msg) {
-    const lst = ess.jlsts[page];
-    if (lst) {
-        const res = lst[job];
-        if (res) {
-            return ((Math.floor(Math.random()*res.difficulty)+1)<res.difficulty);
-        }
+exports.remCF = function(id, amt) {
+    var udat = ess.getUdata(id);
+    udat.job.consec_fails_allowed = udat.job.consec_fails_allowed - amt;
+    if (udat.job.consec_fails_allowed < 0) {
+        return true;
     }
+    ess.setUdata(id, udat);
+    return false;
 }
 
-exports.jobsString = function(ess, pagenum) {
-    const lst = ess.jlsts[pagenum];
-    var str = "";
-    for (const i in lst) {
-        str = str.concat("\n`"+lst[i].name+"` - Required "+lst[i].exp_req.toString()+" XP");
+exports.workJob = function(id, msg) {
+    var job = ess.getUdata(id).job;
+    if (job) {
+        const wof = (Math.floor(Math.random()*job.difficulty)+1);
+        console.log(wof);
+        if (wof < job.difficulty) {
+            if (ess.remCF(id, 1) == true) {
+                ess.jobQuit(id, msg);
+            }
+            msg.reply("The day at work didn't go so well...");
+            return;
+        } else {
+            ess.addMoneyAndXP(id, job.wage, job.exp_get);
+            msg.reply("Success! Earned **$"+job.wage+"** and **"+job.exp_get+" XP**.");
+            return;
+        }
     }
-    return str;
+    msg.reply("No job to work.");
+}
+
+exports.jobApply = function(id, page, obj, msg) {
+    const lst = ess.jlsts[parseInt(page)-1];
+    if (lst) {
+        const itm = lst[parseInt(obj)-1];
+        if (itm) {
+            var udat = ess.getUdata(id);
+            if (udat.scores.exp >= itm.exp_req) {
+                const iter = udat.job;
+                if (iter == null) {
+                    udat.job = itm;
+                    ess.setUdata(id, udat);
+                    msg.reply("Became a ".concat(itm.name+"."));
+                    return;
+                } else {
+                    msg.reply("Could not apply for job. Leave your current job first.");
+                    return;
+                }
+            } else {
+                msg.reply("XP too low for job: > "+udat.scores.exp);
+                return;
+            }
+        }
+    }
+    msg.reply("Apply for jobs: `~job apply [page:int] [job:int]`.");
+}
+
+exports.jobQuit = function(id, msg) {
+    var udat = ess.getUdata(id);
+    const iter = udat.job;
+    if (iter != null) {
+        udat.job = null;
+        ess.setUdata(id, udat);
+        msg.reply("Left job.");
+        return;
+    } else {
+        msg.reply("No job to quit!");
+        return;
+    }
 }
 
 exports.isBot = function(users) {
