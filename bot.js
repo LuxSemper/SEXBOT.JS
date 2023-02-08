@@ -85,7 +85,20 @@ client.on("messageCreate", async (msg) => {
                 msg.reply("__**Shop**__\n".concat(pages[2]));
                 return;
             }
-            msg.reply("Wilkommen! Use in integer `(1-3)` to select the shop page.");
+            msg.reply("Wilkommen! Use an integer `(1-3)` to select the shop page.");
+        }
+        if (msg.content.toLowerCase().startsWith('~jobs')) {
+            const splt = msg.content.split(" ");
+            const pages = [ess.jobsString(ess, 0, msg), ess.jobsString(ess, 1, msg)];
+            if (splt[1] == "1") {
+                msg.reply("__**Jobs**__\n".concat(pages[0]));
+                return;
+            }
+            if (splt[1] == "2") {
+                msg.reply("__**Jobs**__\n".concat(pages[1]));
+                return;
+            }
+            msg.reply("Wilkommen! Use an integer `(1-2)` to select the job page.");
         }
         if (msg.content.toLowerCase().startsWith('~buy')) {
             const splt = msg.content.split(" ");
@@ -93,7 +106,13 @@ client.on("messageCreate", async (msg) => {
         }
         if (msg.content.toLowerCase().startsWith('~info')) {
             const splt = msg.content.split(" ");
-            const ssm = ess.getItemInfo(ess, (parseInt(splt[1])-1), (parseInt(splt[2])-1), msg);
+            var ssm = "Getting information: `~info [(job/item)] [page:int] [obj:int]`.";
+            if (splt[1] == "item") {
+                ssm = ess.getItemInfo(ess, (parseInt(splt[2])-1), (parseInt(splt[3])-1), msg);
+            }
+            if (splt[1] == "job") {
+                ssm = ess.getJobInfo(ess, (parseInt(splt[2])-1), (parseInt(splt[3])-1), msg);
+            }
             if (ssm) {
                 msg.reply(ssm);
             }
@@ -117,7 +136,7 @@ client.on("messageCreate", async (msg) => {
             }
         }
         if (msg.content.toLowerCase().startsWith('~help')) {
-            msg.reply("__**Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the gvien page.\n`~rape [target:@user]` - Rapes the mentioned user.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.");
+            msg.reply("__**Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the gvien page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~rape [target:@user]` - Rapes the mentioned user.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.");
         }
         if (msg.content.startsWith("~vote ")) {
             if (msg.guild.ownerId != client.user.id) {

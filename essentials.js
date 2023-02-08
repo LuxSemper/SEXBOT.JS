@@ -36,7 +36,7 @@ exports.jobs = {
     cashier:{name:"Cashier", wage:20,difficulty:2,consec_fails_allowed:3,exp_req:250,exp_get:5},
     crewmate:{name:"Crewmate", wage:17,difficulty:4,consec_fails_allowed:1,exp_req:25,exp_get:7},
     janitor:{name:"Janitor", wage:12,difficulty:1,consec_fails_allowed:4,exp_req:50,exp_get:2},
-    journalist:{name:"Journalist", wage:1,difficulty:5,consec_fails_allowed:0,exp_req:0,exp_get:1},
+    journalist:{name:"Author", wage:1,difficulty:5,consec_fails_allowed:0,exp_req:0,exp_get:1},
     nftseller:{name:"NFT Seller", wage:50,difficulty:4,consec_fails_allowed:1,exp_req:1000,exp_get:15},
     minecrafter:{name:"Minecrafter", wage:40,difficulty:3,consec_fails_allowed:2,exp_req:100,exp_get:8},
     imposter:{name:"Imposter", wage:32,difficulty:4,consec_fails_allowed:1,exp_req:500,exp_get:11},
@@ -84,7 +84,6 @@ exports.jlsts = [
 ];
 
 exports.shopItemsString = function(ess, pagenum, msg) {
-    console.log("ran");
     const lst = ess.lsts[pagenum];
     var str = "";
     for (const i in lst) {
@@ -99,6 +98,7 @@ exports.dataTemplate = {
         {item:{},count:0}
     ],
     money:0,
+    job:{},
     scores: {
         highestSex:0,
         exp:0
@@ -236,7 +236,18 @@ exports.getItemInfo = function(ess, page, itid, msg) {
             return ("**Name:** "+itm.name+"\n**Price:** $"+itm.price+"\n**Description:** "+itm.description+"\n**Usable:** "+itm.usable);
         }
     }
-    msg.reply("Getting item information: `~info [page:int] [item:int]`.");
+    msg.reply("Getting item information: `~info item [page:int] [item:int]`.");
+}
+
+exports.getJobInfo = function(ess, page, itid, msg) {
+    const lst = ess.jlsts[page];
+    if (lst) {
+        const job = lst[itid];
+        if (job) {
+            return ("**Name:** "+job.name+"\n**Wage:** $"+job.wage+"\n**Difficulty:** "+job.difficulty+"\n**Consecutive Allowed Fails:** "+job.consec_fails_allowed+"\n**XP Gain:** "+job.exp_get+"\n**XP Requirement:** "+job.exp_req);
+        }
+    }
+    msg.reply("Getting job information: `~info job [page:int] [job:int]`.");
 }
 
 exports.addMoney = function(id, amt) {
@@ -253,6 +264,15 @@ exports.workJob = function(id, page, job, msg) {
             return ((Math.floor(Math.random()*res.difficulty)+1)<res.difficulty);
         }
     }
+}
+
+exports.jobsString = function(ess, pagenum) {
+    const lst = ess.jlsts[pagenum];
+    var str = "";
+    for (const i in lst) {
+        str = str.concat("\n`"+lst[i].name+"` - Required "+lst[i].exp_req.toString()+" XP");
+    }
+    return str;
 }
 
 exports.isBot = function(users) {
