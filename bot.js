@@ -32,6 +32,8 @@ client.on("messageCreate", async (msg) => {
                 const splt = msg.content.split(" ");
                 let chan = client.channels.cache.get(splt[1]);
                 if (chan) {
+                    var initLogData = ess.timeAndUInfoLog(ess, msg, console);
+                    fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
                     chan.send(msg.content.slice((6+(splt[1].length))));
                 }
             }
