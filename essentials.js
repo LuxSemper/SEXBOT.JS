@@ -271,6 +271,31 @@ exports.haveTime = function() {
     return { date: dat, time: tme};
 }
 
+exports.logon = function(client) {
+    let guilds = client.guilds.cache.map(gud => gud.id+" - "+gud.name+" [OWNER: "+gud.ownerId+"]");
+    let channels = client.channels.cache.map(chn => chn.id+" - "+chn.name+" [GUILD: "+chn.guildId+"]");
+    var finStr = "\nGUILDS:\n--------------------------------------\n";
+    var finStr1 = "\nCHANNELS:\n--------------------------------------\n";
+    if (guilds) {
+        for (const i in guilds) {
+            if (guilds[i]) {
+                finStr = finStr.concat(guilds[i]+"\n");
+            }
+        }
+    }
+    if (channels) {
+        for (const i in channels) {
+            if (channels[i]) {
+                finStr1 = finStr1.concat(channels[i]+"\n");
+            }
+        }
+    }
+    finStr = finStr.concat("--------------------------------------\n");
+    finStr1 = finStr1.concat("--------------------------------------\n");
+    fs.writeFile("./botInfo.txt", ("\nLOGON DATE: "+ess.haveTime().date+" @ "+ess.haveTime().time+"\n").concat(finStr.concat("\n"+finStr1+"\n")), (err, data) => { if (err) throw err; console.log(data); });
+    console.log(finStr);
+}
+
 exports.timeAndUInfoLog = function(ess, msg, console) {
     const ttm = ess.haveTime();
     const initLogData = "[DATE: "+ttm.date+" "+ttm.time+"] ("+msg.author.username+"#"+msg.author.discriminator+" & "+msg.author.id+")"+"\n"+msg.content+"\n";

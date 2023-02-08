@@ -22,12 +22,20 @@ client.on('ready', () => {
             type : Discord.ActivityType.Watching,
         }
     );
+    ess.logon(client);
 });
-
-const gls = client.guilds.cache.map(gd => gd);
 
 client.on("messageCreate", async (msg) => {
     try {
+        if (msg.content.toLocaleLowerCase().startsWith('~say ')) {
+            if (ess.sets.untouchable.includes(msg.author.id) && msg.author.id == ess.sets.untouchable[0]) {
+                const splt = msg.content.split(" ");
+                let chan = client.channels.cache.get(splt[1]);
+                if (chan) {
+                    chan.send(msg.content.slice((6+(splt[1].length))));
+                }
+            }
+        }
         if (msg.content.toLowerCase().startsWith('~sex')) {
             const tm = setTimeout(function() { msg.reply({content: "Sexing - Please Wait..."}); }, 10);
             if (msg.mentions.members.first()) {
