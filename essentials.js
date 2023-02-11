@@ -36,7 +36,7 @@ exports.jobs = {
     cashier:{name:"Cashier", wage:20,difficulty:2,consec_fails_allowed:3,exp_req:250,exp_get:5},
     crewmate:{name:"Crewmate", wage:17,difficulty:4,consec_fails_allowed:1,exp_req:25,exp_get:7},
     janitor:{name:"Janitor", wage:12,difficulty:1,consec_fails_allowed:4,exp_req:50,exp_get:2},
-    journalist:{name:"Author", wage:1,difficulty:5,consec_fails_allowed:0,exp_req:0,exp_get:1},
+    journalist:{name:"Author", wage:1,difficulty:1,consec_fails_allowed:5,exp_req:0,exp_get:1},
     nftseller:{name:"NFT Seller", wage:50,difficulty:4,consec_fails_allowed:1,exp_req:1000,exp_get:15},
     minecrafter:{name:"Minecrafter", wage:40,difficulty:3,consec_fails_allowed:2,exp_req:100,exp_get:8},
     imposter:{name:"Imposter", wage:32,difficulty:4,consec_fails_allowed:1,exp_req:500,exp_get:11},

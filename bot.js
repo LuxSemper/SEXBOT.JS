@@ -128,18 +128,27 @@ client.on("messageCreate", async (msg) => {
             if (splt[1] == "work") {
                 ess.workJob(msg.author.id, msg);
             }
+            if (splt[1] == "current") {
+                var jb = ess.getUdata(msg.author.id).job;
+                if (jb) {
+                    jb = jb.name;
+                } else {
+                    jb = "None";
+                }
+                msg.reply("Current job: "+jb);
+            }
         }
         if (msg.content.toLowerCase().startsWith('~balance')) {
             const usr = msg.mentions.users.first();
             if (usr) {
-                const mon = ess.getBal(usr.id);
+                const mon = ess.getBal(usr.id, msg);
                 if (!mon) {
                     return;
                 }
                 msg.reply("User <@"+usr.id+"> has $"+mon);
                 console.log("Balance got "+usr.id);
             } else {
-                const mon = ess.getBal(msg.author.id);
+                const mon = ess.getBal(msg.author.id, msg);
                 if (!mon) {
                     return;
                 }
@@ -150,14 +159,14 @@ client.on("messageCreate", async (msg) => {
         if (msg.content.toLowerCase().startsWith('~xp')) {
             const usr = msg.mentions.users.first();
             if (usr) {
-                const mon = ess.getXP(usr.id);
+                const mon = ess.getXP(usr.id, msg);
                 if (!mon) {
                     return;
                 }
                 msg.reply("User <@"+usr.id+"> has "+mon+" XP");
                 console.log("XP got "+usr.id);
             } else {
-                const mon = ess.getXP(msg.author.id);
+                const mon = ess.getXP(msg.author.id, msg);
                 if (!mon) {
                     return;
                 }
@@ -166,7 +175,7 @@ client.on("messageCreate", async (msg) => {
             }
         }
         if (msg.content.toLowerCase().startsWith('~help')) {
-            msg.reply("__**Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Provides money and XP.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~rape [target:@user]` - Rapes the mentioned user.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~xp [target:@user]` - Gets the XP of the user or mention.");
+            msg.reply("__**Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~rape [target:@user]` - Rapes the mentioned user.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~xp [target:@user]` - Gets the XP of the user or mention.");
         }
         if (msg.content.startsWith("~vote ")) {
             if (msg.guild.ownerId != client.user.id) {
