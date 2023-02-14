@@ -108,85 +108,85 @@ exports.dataTemplate = {
     ],
     money:0,
     job:null,
+    valentine:null,
     scores: {
         highestSex:0,
         exp:0
     }
 }
 
-exports.getUdata = function(id) {
-    const dat = fs.readFileSync("./udata/data.txt", "utf-8");
-    var udat = JSON.parse(dat);
-        var data;
-        for (const i in udat[0].userData) {
-            console.log("ran");
-            if (udat[0].userData[i]) {
-                if (udat[0].userData[i].uid == id) {
-                    console.log("Data found for "+id);
-                    data = udat[0].userData[i];
-                    break;
-                }
-            } else {
-                console.log("No data in file");
-                var obj = exports.dataTemplate;
-                obj.uid = id;
-                obj.inv = [];
-                udat[0].userData.push(obj);
-                fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
-                data = obj;
-                break;
-            }
-        }
-        if (!data) {
-            console.log("No data for "+id);
-            var obj = exports.dataTemplate;
-            obj.uid = id;
-            obj.inv = [];
-            udat[0].userData.push(obj);
-            fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
-            data = obj;
-        }
-        console.log("Data collected from "+id);
-        return data;
+exports.checkFile = function(id) {
+    const fname = "./udata/"+id+".txt";
+    var temp = ess.dataTemplate;
+    temp.inv = [];
+    temp.uid = id;
+    const fdata = `[{"userData":`+JSON.stringify(temp)+"}]";
+    if (fs.existsSync(fname) == false) {
+        console.log("No such file");
+        fs.appendFileSync(fname, fdata);
+    }
+    return fname;
 }
 
-exports.setUdata = function(id, newData) {
-    const dat = fs.readFileSync("./udata/data.txt", "utf-8");
+exports.getUdata = function(id) {
+    const fname = ess.checkFile(id);
+    const dat = fs.readFileSync(fname, "utf-8");
     var udat = JSON.parse(dat);
     var data;
-    var int;
-    for (const i in udat[0].userData) {
-        console.log("ran");
-        if (udat[0].userData[i]) {
-            if (udat[0].userData[i].uid == id) {
-                console.log("Data found for "+id);
-                data = udat[0].userData[i];
-                int = i;
-                break;
-            }
-        } else {
-            console.log("No data in file");
-            var obj = exports.dataTemplate;
-            obj.uid = id;
-            obj.inv = [];
-            udat[0].userData.push(obj);
-            fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
-            data = obj;
-            break;
-        }
+    if (udat[0].userData) {
+        data = udat[0].userData;
+        console.log("Data found for "+id);
+    } else {
+        console.log("No data in file");
+        var obj = exports.dataTemplate;
+        obj.uid = id;
+        obj.inv = [];
+        udat[0].userData = obj;
+        fs.writeFile(fname, JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+        data = obj;
     }
     if (!data) {
         console.log("No data for "+id);
         var obj = exports.dataTemplate;
         obj.uid = id;
         obj.inv = [];
-        udat[0].userData.push(obj);
-        fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+        udat[0].userData = obj;
+        fs.writeFile(fname, JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+        data = obj;
+    }
+    console.log("Data collected from "+id);
+    return data;
+}
+
+exports.setUdata = function(id, newData) {
+    const fname = ess.checkFile(id);
+    const dat = fs.readFileSync(fname, "utf-8");
+    var udat = JSON.parse(dat);
+    var data;
+    if (udat[0].userData) {
+        console.log("Data found for "+id);
+        data = udat[0].userData;
+    } else {
+        console.log("No data in file");
+        var obj = exports.dataTemplate;
+        obj.uid = id;
+        obj.inv = [];
+        udat[0].userData = obj;
+        fs.writeFile(fname, JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+        data = obj;
+    }
+    if (!data) {
+        console.log("No data for "+id);
+        var obj = exports.dataTemplate;
+        obj.uid = id;
+        obj.inv = [];
+        udat[0].userData = obj;
+        fs.writeFile(fname, JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
         data = obj;
     }
     newData.uid = id;
-    udat[0].userData[int] = newData;
-    fs.writeFile("./udata/data.txt", JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
+    udat[0].userData = newData;
+    fs.writeFile(fname, JSON.stringify(udat), (err, data) => { if (err) throw err; console.log(data); });
 }
 
 exports.findItem = function(inv, itm) {
@@ -229,19 +229,19 @@ exports.buyItem = function(ess, id, page, obj, msg) {
 }
 
 exports.getBal = function(id, msg) {
-    console.log(id);
     var udat = ess.getUdata(id);
-    if (udat.money) {
-        return udat.money;
+    const mon = udat.money;
+    if (udat) {
+        return mon.toString();
     }
     msg.reply("Balance: `~balance [@user:optional]`.");
 }
 
 exports.getXP = function(id, msg) {
-    console.log(id);
     var udat = ess.getUdata(id);
-    if (udat.scores.exp) {
-        return udat.scores.exp;
+    const mon = udat.scores.exp;
+    if (udat) {
+        return mon.toString();
     }
     msg.reply("XP: `~xp [@user:optional]`.");
 }
@@ -305,6 +305,58 @@ exports.workJob = function(id, msg) {
     msg.reply("No job to work.");
 }
 
+exports.askVal = function(id, targid, msg) {
+    const v1 = ess.getValentine(id);
+    if (v1.trf != true) {
+        var dat = ess.getUdata(id);
+        dat.valentine = targid;
+        ess.setUdata(id, dat);
+        const v2 = ess.getUdata(targid);
+        if (v2.valentine == id) {
+            msg.reply("You and <@"+targid+"> are now valentines!? o///o");
+        } else {
+            msg.reply("Now ask <@"+targid+"> to ask you back!");
+        }
+        return;
+    } else {
+        msg.reply("You already have a valentine...");
+    }
+}
+
+exports.delVal = function(id, msg) {
+    if (ess.getValentine(id).trf == true) {
+        var dat = ess.getUdata(id);
+        const targid = dat.valentine;
+        dat.valentine = null;
+        ess.setUdata(id, dat);
+        msg.reply("<@"+targid+"> is no longer your valentine... want to hook up~?");
+        return;
+    } else {
+        if (ess.getUdata(id).valentine != null) {
+            var dat = ess.getUdata(id);
+            dat.valentine = null;
+            ess.setUdata(id, dat);
+            msg.reply("I removed your love interest.");
+            return;
+        }
+        msg.reply("You do not have a valentine to cut ties with, dumbass~!");
+    }
+}
+
+exports.getValentine = function(id) {
+    const dat = ess.getUdata(id);
+    if (dat.valentine != null) {
+        const da2 = ess.getUdata(dat.valentine);
+        if (da2.valentine == id) {
+            return { txt: "<@"+id+">'s valentine is <@"+dat.valentine+">!", trf: true };
+        } else {
+            return { txt: "<@"+id+"> has no valentine but is interested in <@"+dat.valentine+">!", trf: false };
+        }
+    } else {
+        return { txt: "<@"+id+"> has no valentine...", trf: false };
+    }
+}
+
 exports.jobApply = function(id, page, obj, msg) {
     const lst = ess.jlsts[parseInt(page)-1];
     if (lst) {
@@ -358,7 +410,7 @@ exports.haveTime = function() {
     const dt = new Date();
     var dat = (dt.getMonth().toString()+"."+dt.getDate().toString()+"."+dt.getFullYear().toString());
     var tme = (dt.getHours().toString()+":"+dt.getMinutes().toString()+":"+dt.getSeconds().toString()+":"+dt.getMilliseconds().toString());
-    return { date: dat, time: tme};
+    return { date: dat, time: tme };
 }
 
 exports.logon = function(client) {

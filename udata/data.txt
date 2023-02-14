@@ -1,1 +1,0 @@
-[{"userData":[{"uid":"","inv":[],"money":0,"job":null,"scores":{"highestSex":0,"exp":0}}]}]
