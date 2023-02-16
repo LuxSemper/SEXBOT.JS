@@ -82,21 +82,6 @@ client.on("messageCreate", async (msg) => {
                 const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
             }
         }
-        if (msg.content.toLowerCase().startsWith('~rape ')) {
-            const tm = setTimeout(function() { msg.reply("Raping - Please Wait..."); }, 10);
-            const txtRt = msg.content.slice(6);
-            var txtRtr = txtRt;
-            if (msg.content.match("@everyone")) { txtRtr = txtRt.replace("@everyone", "everyone"); }
-            if (msg.content.match("@here")) { txtRtr = txtRt.replace("@here", "here"); }
-            const txtS = txtRtr;
-            //const txtS = txtRtr.replace("@", "");
-            const arr = Math.floor(Math.random() * 3);
-            if (arr === 2) {
-                const tm = setTimeout(function() { if (!msg) { return; } msg.channel.send({ content: "<@"+msg.author.id+">, you raped ".concat(txtS.concat(". You were arrested and charged.")), allowedMentions: { parse: [] }}); }, 3000);
-            } else {
-                const tm = setTimeout(function() { if (!msg) { return; } msg.channel.send({ content: "<@"+msg.author.id+">, you raped ".concat(txtS.concat(". You got off scott free!")), allowedMentions: { parse: [] }}); }, 3000);
-            }
-        }
         if (msg.content.toLowerCase().startsWith('~shop')) {
             const splt = msg.content.split(" ");
             const pages = [ess.shopItemsString(ess, 0, msg), ess.shopItemsString(ess, 1, msg), ess.shopItemsString(ess, 2, msg)];
@@ -202,7 +187,7 @@ client.on("messageCreate", async (msg) => {
             }
         }
         if (msg.content.toLowerCase().startsWith('~help')) {
-            msg.reply("__**Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~rape [target:@user]` - Rapes the mentioned user.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.");
+            msg.reply("__**Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.");
         }
         if (msg.content.startsWith("~vote ")) {
             if (msg.guild.ownerId != client.user.id) {
