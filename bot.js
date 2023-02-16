@@ -20,7 +20,7 @@ const client = new Discord.Client({ intents: botIntent });
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
     client.user.setActivity(
-        "Sex in 4K HD 108p live on PornHub", 
+        "~help", 
         {
             type : Discord.ActivityType.Watching,
         }
