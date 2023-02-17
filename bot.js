@@ -1,6 +1,5 @@
-const Discord = require("discord.js");
+const discord = require('discord.js');
 const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
-const xml = require("xmlhttprequest");
 const fs = require("fs");
 const ess = require("./essentials.js");
 const voice = require('@discordjs/voice');
@@ -8,6 +7,7 @@ const { messageLink } = require("discord.js");
 const { join } = require("node:path");
 const { allowedNodeEnvironmentFlags } = require("process");
 const { request } = require('http');
+const xml = require("xmlhttprequest");
 const fetch = require('node-fetch');
 //const openai = require('openai');
 //const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
@@ -19,7 +19,7 @@ const mainDate = new Date();
 
 var botIntent = [];
 //botIntent.add(Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS, Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_MESSAGE_TYPING, Discord.Intents.FLAGS.DIRECT_MESSAGES, Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING);
-//javascript broke or something
+//javascript sex broke or something
 
 botIntent.push(Discord.IntentsBitField.Flags.GuildBans, Discord.IntentsBitField.Flags.GuildMessages, Discord.IntentsBitField.Flags.GuildMembers, Discord.IntentsBitField.Flags.GuildPresences, Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.MessageContent, Discord.IntentsBitField.Flags.GuildMessageTyping, Discord.IntentsBitField.Flags.GuildIntegrations, Discord.IntentsBitField.Flags.Guilds);
 const client = new Discord.Client({ intents: botIntent });
@@ -29,7 +29,7 @@ client.on('ready', () => {
     client.user.setActivity(
         "~help", 
         {
-            type : Discord.ActivityType.Playing,
+            type : Discord.ActivityType.Watching,
         }
     );
     ess.logon(client);
@@ -189,13 +189,13 @@ client.on("messageCreate", async (msg) => {
                 const mon = ess.getXP(msg.author.id, msg);
                 if (!mon) {
                     return;
-                } 
+                }
                 msg.reply("User <@"+msg.author.id+"> has "+mon+" XP");
                 console.log("XP got "+msg.author.id);
             }
         }
         //start fluffery code
-        if (msg.content.toLowerCase().startsWith(`~whopper`)) {
+        if (msg.content.toLocaleLowerCase().startsWith(`~whopper`)) {
             msg.reply("https://cdn.discordapp.com/attachments/669796626784714756/1074666197611716699/TWD.mp4");
             return;
         }
@@ -203,7 +203,6 @@ client.on("messageCreate", async (msg) => {
             msg.reply('https://cdn.discordapp.com/attachments/723599467172986962/1074336826464145589/trim.90D66A28-3AA2-4D37-A744-A6FD591DA6F0.mov');
             return;
         }
-
         if (msg.content.toLocaleLowerCase().startsWith(`~ping`)) {
             msg.reply(`Pong! **(${Date.now() - msg.createdTimestamp}ms)**`)
             return;
@@ -250,32 +249,7 @@ client.on("messageCreate", async (msg) => {
               console.error(error);
               msg.reply('>///< Oops! Something went wrong while getting your birb');
             }
-          }
-
-          //if (msg.content.startsWith('~bulkdel')) {
-            // Check if the user has the MANAGE_MESSAGES permission
-            //if (!msg.member.permissions.has('PermissionsBitField.Flags.ManageMessages')) { // this is causing issues because new discord api shit FUCK CUM
-             // return msg.reply('You do not have permission to use this command.');
-            //}
-          
-            // Get the number of messages to delete from the command arguments
-            //const args = msg.content.split(' ');
-            //const amount = parseInt(args[1]);
-          
-            //if (isNaN(amount)) {
-            //  return msg.reply('Please provide a number of messages to delete.');
-            //}
-          
-            // Delete the messages
-           // msg.channel.bulkDelete(amount)
-           //   .then(() => {
- //               msg.reply(`Deleted ${amount} messages.`);
- //             })
- //             .catch(err => {
-  //              console.r;
-   //             msg.reply('>///< missed. i have no idea what is going on.');
-   //           });
-  //        }          
+          }       
 
         if (msg.content.toLowerCase().startsWith('~help')) {
             msg.reply("__**All Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.\n`~ping` - Developer Command to see how much latency there is\n`~whopper` - shitpost whopper meme\n \n __**To do Commands**__ \n `~eval [code]` - evaluate math expression \n `~trace [height] [width] [code] `- Render image from code\n `~animate [height] [width] [frames] [code]` - animate render from code \n `~bytebeat [samplerate] [duration] [code]` - Render audio from code");
