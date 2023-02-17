@@ -197,7 +197,7 @@ client.on("messageCreate", async (msg) => {
             msg.reply(`Pong **(${Date.now() - msg.createdTimestamp}ms)** :woozy_face: `)
             return;
         }
-        if (msg.content.to(`femboy`)) { 
+        if (msg.content.toLocaleLowerCase.startsWith(`femboy`)) { 
             msg.reply("uwu");
             return;
         }
