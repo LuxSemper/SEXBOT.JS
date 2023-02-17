@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
 const xml = require("xmlhttprequest");
 const fs = require("fs");
 const ess = require("./essentials.js");
@@ -6,6 +7,7 @@ const voice = require('@discordjs/voice');
 const { messageLink } = require("discord.js");
 const { join } = require("node:path");
 const { allowedNodeEnvironmentFlags } = require("process");
+const { request } = require('http');
 const mainDate = new Date();
 
 //const botIntent = new Discord.Intents();
@@ -13,7 +15,7 @@ const mainDate = new Date();
 
 var botIntent = [];
 //botIntent.add(Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS, Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_MESSAGE_TYPING, Discord.Intents.FLAGS.DIRECT_MESSAGES, Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING);
-//javascript sex broke or something
+//javascript broke or something
 
 botIntent.push(Discord.IntentsBitField.Flags.GuildBans, Discord.IntentsBitField.Flags.GuildMessages, Discord.IntentsBitField.Flags.GuildMembers, Discord.IntentsBitField.Flags.GuildPresences, Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.MessageContent, Discord.IntentsBitField.Flags.GuildMessageTyping, Discord.IntentsBitField.Flags.GuildIntegrations, Discord.IntentsBitField.Flags.Guilds);
 const client = new Discord.Client({ intents: botIntent });
@@ -23,7 +25,7 @@ client.on('ready', () => {
     client.user.setActivity(
         "~help", 
         {
-            type : Discord.ActivityType.Watching,
+            type : Discord.ActivityType.Playing,
         }
     );
     ess.logon(client);
@@ -183,22 +185,29 @@ client.on("messageCreate", async (msg) => {
                 const mon = ess.getXP(msg.author.id, msg);
                 if (!mon) {
                     return;
-                }
+                } 
                 msg.reply("User <@"+msg.author.id+"> has "+mon+" XP");
                 console.log("XP got "+msg.author.id);
             }
         }
         //start fluffery code
-        if (msg.content.toLocaleLowerCase().startsWith(`~whopper`)) {
+        if (msg.content.toLowerCase().startsWith(`~whopper`)) {
             msg.reply("https://cdn.discordapp.com/attachments/669796626784714756/1074666197611716699/TWD.mp4");
             return;
         }
         if (msg.content.toLocaleLowerCase().startsWith(`~ping`)) {
-            msg.reply(`Pong **(${Date.now() - msg.createdTimestamp}ms)** :woozy_face: `)
+            msg.reply(`Pong! **(${Date.now() - msg.createdTimestamp}ms)**`)
             return;
         }
-        if (msg.content.toLocaleLowerCase.startsWith(`femboy`)) { 
+        if (msg.content.toLocaleLowerCase().startsWith(`femboy`))  { 
             msg.reply("uwu");
+            return;
+        } // ty shibe.online & azrogers
+        if (msg.content.toLocaleLowerCase().startsWith(`~shibe`)) {
+            msg.reply('getting your shibe :3')
+            const shibeResult = await request('http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=false');
+            const { file } = await shibeResult.body.json();
+            msg.reply({ files: [file] });
             return;
         }
 
