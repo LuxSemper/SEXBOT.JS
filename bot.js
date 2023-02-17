@@ -1,4 +1,4 @@
-const discord = require('discord.js');
+const Discord = require('discord.js');
 const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
 const fs = require("fs");
 const ess = require("./essentials.js");
