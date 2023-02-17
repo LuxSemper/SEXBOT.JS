@@ -1,11 +1,17 @@
-const Discord = require("discord.js");
-const xml = require("xmlhttprequest");
+const discord = require('discord.js');
+const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
 const fs = require("fs");
 const ess = require("./essentials.js");
 const voice = require('@discordjs/voice');
 const { messageLink } = require("discord.js");
 const { join } = require("node:path");
 const { allowedNodeEnvironmentFlags } = require("process");
+const { request } = require('http');
+const xml = require("xmlhttprequest");
+const fetch = require('node-fetch');
+//const openai = require('openai');
+//const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
+//openai.apiKey = openaiApiKey;
 const mainDate = new Date();
 
 //const botIntent = new Discord.Intents();
@@ -193,14 +199,57 @@ client.on("messageCreate", async (msg) => {
             msg.reply("https://cdn.discordapp.com/attachments/669796626784714756/1074666197611716699/TWD.mp4");
             return;
         }
-        if (msg.content.toLocaleLowerCase().startsWith(`~ping`)) {
-            msg.reply(`Pong **(${Date.now() - msg.createdTimestamp}ms)** :woozy_face: `)
+        if (msg.content.toLowerCase().startsWith('~kys')) {
+            msg.reply('https://cdn.discordapp.com/attachments/723599467172986962/1074336826464145589/trim.90D66A28-3AA2-4D37-A744-A6FD591DA6F0.mov');
             return;
         }
-        if (msg.content.toLocaleLowerCase.startsWith(`femboy`)) { 
+        if (msg.content.toLocaleLowerCase().startsWith(`~ping`)) {
+            msg.reply(`Pong! **(${Date.now() - msg.createdTimestamp}ms)**`)
+            return;
+        }
+        if (msg.content.toLocaleLowerCase().startsWith(`femboy`))  { 
             msg.reply("uwu");
             return;
-        }
+        } 
+        // ty azrogers, very cool
+        if (msg.content.toLowerCase().startsWith(`~shibe`)) {
+            msg.reply('getting your shibe :3');
+          
+            try {
+              const response = await fetch('http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=false');
+              const shibeResult = await response.json();
+              msg.reply({ files: [shibeResult[0]] });
+            } catch (error) {
+              console.error(error);
+              msg.reply('>///< Oops! Something went wrong while getting your shibu');
+            }
+          }
+
+          if (msg.content.toLowerCase().startsWith(`~cat`)) {
+            msg.reply('snuggling w/ a cat:3');
+          
+            try {
+              const response = await fetch('http://shibe.online/api/cats?count=1&urls=true&httpsUrls=false');
+              const catResult = await response.json();
+              msg.reply({ files: [catResult[0]] });
+            } catch (error) {
+              console.error(error);
+              msg.reply('>///< Oops! Something went wrong while getting your cade');
+            }
+          }
+
+          if (msg.content.toLowerCase().startsWith(`~bird`)) {
+            msg.reply('snatching your birdie :3');
+          
+            try {
+              const response = await fetch('http://shibe.online/api/birds?count=1&urls=true&httpsUrls=false');
+              const catResult = await response.json();
+              msg.reply({ files: [catResult[0]] });
+            } catch (error) {
+              console.error(error);
+              msg.reply('>///< Oops! Something went wrong while getting your birb');
+            }
+          }       
 
         if (msg.content.toLowerCase().startsWith('~help')) {
             msg.reply("__**All Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.\n`~ping` - Developer Command to see how much latency there is\n`~whopper` - shitpost whopper meme\n \n __**To do Commands**__ \n `~eval [code]` - evaluate math expression \n `~trace [height] [width] [code] `- Render image from code\n `~animate [height] [width] [frames] [code]` - animate render from code \n `~bytebeat [samplerate] [duration] [code]` - Render audio from code");
