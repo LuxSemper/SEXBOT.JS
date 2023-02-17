@@ -10,7 +10,7 @@
     "tweetnacl": "^1.0.3",
     "xmlhttprequest": "^1.8.0"
   },
-  "name": "fuuga",
+  "name": "las",
   "version": "1.0.0",
   "main": "bot.js",
   "scripts": {
