@@ -191,7 +191,7 @@ client.on("messageCreate", async (msg) => {
         }
         if (msg.content.startsWith("~vote ")) {
             if (msg.guild.ownerId != client.user.id) {
-                msg.reply("N-nya? Master, it appears I'm less dominant in these circumstances... o///o");
+                msg.reply(">///< ERROR'd - Chernobyl 2 just happened where I live. Report any issues to Fluffery");
                 return;
             }
             const splt = msg.content.split(" ");
@@ -245,7 +245,7 @@ client.on("messageCreate", async (msg) => {
         }
         if (msg.content.startsWith("~logfile")) {
             if (msg.guild.ownerId != client.user.id) {
-                msg.reply("N-nya? Master, it appears I'm less dominant in these circumstances... o///o");
+                msg.reply(">///< - Hiroshima just occured at my house, Report this issue to Fluffery");
                 return;
             }
             //set to only work for administrators, but ig that shit isn't gonna work lmfao
