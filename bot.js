@@ -191,7 +191,7 @@ client.on("messageCreate", async (msg) => {
         }
         if (msg.content.startsWith("~vote ")) {
             if (msg.guild.ownerId != client.user.id) {
-                msg.reply(">///< ERROR'd - Chernobyl 2 just happened where I live. Report any issues to Fluffery");
+                msg.reply(">///< Nagasaki just occured where I live. Report this issue to Fluffery");
                 return;
             }
             const splt = msg.content.split(" ");
