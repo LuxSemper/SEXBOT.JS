@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+const discord = require('discord.js');
 const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
 const fs = require("fs");
 const ess = require("./essentials.js");
@@ -9,6 +9,11 @@ const { allowedNodeEnvironmentFlags } = require("process");
 const { request } = require('http');
 const xml = require("xmlhttprequest");
 const fetch = require('node-fetch');
+const { joinVoiceChannel, createAudioPlayer, createAudioResource } = require('@discordjs/voice');
+const ytdl = require('ytdl-core-discord');
+const { Client } = require('discord.js');
+const soundcloud = require('soundcloud-downloader').default;
+const spotifyUri = require('spotify-uri');
 //const openai = require('openai');
 //const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
 //openai.apiKey = openaiApiKey;
@@ -18,6 +23,9 @@ const mainDate = new Date();
 //prolly old api i forgor why remove
 
 var botIntent = [];
+//botIntent.add(Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS, Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_MESSAGE_TYPING, Discord.Intents.FLAGS.DIRECT_MESSAGES, Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING);
+//javascript sex broke or something
+
 botIntent.push(Discord.IntentsBitField.Flags.GuildBans, Discord.IntentsBitField.Flags.GuildMessages, Discord.IntentsBitField.Flags.GuildMembers, Discord.IntentsBitField.Flags.GuildPresences, Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.MessageContent, Discord.IntentsBitField.Flags.GuildMessageTyping, Discord.IntentsBitField.Flags.GuildIntegrations, Discord.IntentsBitField.Flags.Guilds);
 const client = new Discord.Client({ intents: botIntent });
 
@@ -75,7 +83,9 @@ client.on("messageCreate", async (msg) => {
             if (msg.mentions.members.first()) {
                 if (msg.mentions.members.at(1)) {
                     if (msg.mentions.members.at(1).id.toString() === "422438661993529364") {
-                        const tm3 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat(((Math.floor(Math.random() * 52)-1)+55).toString().concat("%`\n(Ejaculation Within `".concat(((Math.floor(Math.random() * 25))+30).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
+                        const tm3 = setTimeout(function() { 
+                            if (!msg) { return;
+                             } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat(((Math.floor(Math.random() * 52)-1)+55).toString().concat("%`\n(Ejaculation Within `".concat(((Math.floor(Math.random() * 25))+30).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
                     } else {
                         const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
                     }
@@ -247,10 +257,99 @@ client.on("messageCreate", async (msg) => {
               msg.reply('>///< Oops! Something went wrong while getting your birb');
             }
           }       
+          
+            if (msg.content.startsWith.toLowerCase('~play')) return;
+          
+            const voiceChannel = msg.member?.voice.channel;
+            if (!voiceChannel) {
+              return msg.reply('You need to be in a voice channel to play music!');
+            }
+          
+            const args = message.content.split(' ');
+            if (args.length < 3) {
+              return msg.reply('Please provide a valid music link!');
+            }
+          
+            const videoUrl = args[2];
+            let stream = null;
+            let source = '';
+            if (videoUrl.includes('youtube.com')) {
+              stream = await ytdl(videoUrl, { filter: 'audioonly', opusEncoded: true });
+              source = 'YouTube';
+            } else if (videoUrl.includes('soundcloud.com')) {
+              const trackInfo = await soundcloud.getInfo(videoUrl);
+              const trackUrl = await soundcloud.downloadFormat(trackInfo, {
+                format: soundcloud.FORMATS.OPUS,
+                opusEncoded: true,
+              });
+              stream = await ytdl(trackUrl, { opusEncoded: true });
+              source = 'SoundCloud';
+            } else if (videoUrl.includes('spotify.com')) {
+              try {
+                const { id } = spotifyUri.parse(videoUrl);
+                const trackInfo = await spotifyUri.getData(id);
+                const trackUrl = trackInfo.preview_url;
+                stream = await ytdl(trackUrl, { opusEncoded: true });
+                source = 'Spotify';
+              } catch (err) {
+                console.error(err);
+                return message.reply('Could not find the track on Spotify!');
+              }
+            } else if (videoUrl.endsWith('.mp3')) {
+              stream = fs.createReadStream(videoUrl);
+              source = 'Local MP3';
+            } else {
+              return message.reply('Please provide a valid music link!');
+            }
+          
+            const connection = joinVoiceChannel({
+              channelId: voiceChannel.id,
+              guildId: message.guild.id,
+              adapterCreator: message.guild.voiceAdapterCreator,
+            });
+            const resource = createAudioResource(stream);
+            const player = createAudioPlayer();
+            connection.subscribe(player);
+            player.play(resource);
+            player.on('stateChange', (oldState, newState) => {
+              if (newState.status === 'idle') {
+                connection.destroy();
+              }
+            });
+          
+            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
+            console.log(logData);
+          });
 
-        if (msg.content.toLowerCase().startsWith('~help')) {
-            msg.reply("__**All Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.\n`~ping` - Developer Command to see how much latency there is\n`~whopper` - shitpost whopper meme\n `~kidnap`- kidnaps you cutely (SATIRE) \n `~shibe`  - gets you shibe pics \n `~cat` - gets you kitty cat pics \n `~bird` - gets you birdie pictures \n \n __**To do Commands**__ \n `~eval [code]` - evaluate math expression \n `~trace [height] [width] [code] `- Render image from code\n `~animate [height] [width] [frames] [code]` - animate render from code \n `~bytebeat [samplerate] [duration] [code]` - Render audio from code \n `~gpt [query]` - queries ChatGPT");
-        }
+//bytebeat
+            if (!msg.content.startsWith('~bytebeat')) return;
+
+                const args = msg.content.split(' ');
+                    if (args.length < 4) {
+                      return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+                }
+
+                const code = args.slice(3).join(' ');
+                const sampleRate = parseInt(args[1]);
+                const duration = parseFloat(args[2]);
+
+                if (isNaN(sampleRate) || isNaN(duration)) {
+                  return msg.reply('Please provide valid sample rate and duration!');
+                }
+
+          // Generate the audio file using bytebeat code
+          
+//          const audioFilePath = './audio/bytebeat.wav';
+//          exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {
+//            if (error) {
+//              return msg.reply('An error occurred while generating the audio file. `Error: ${error.msg}`');
+//            }
+//            if (stderr) {
+//              return msg.reply('An error occurred while generating the audio file.');
+//            }
+//            console.log(`Generated audio file: ${audioFilePath}`);
+
+
         if (msg.content.startsWith("~vote ")) {
             if (msg.guild.ownerId != client.user.id) {
                 msg.reply(">///< Nagasaki just happened where I live. Report this issue to Fluffery");
@@ -315,8 +414,7 @@ client.on("messageCreate", async (msg) => {
                 msg.channel.send({files: [{ attachment: "logs.txt" }]});
                 ess.timeAndUInfoLog(ess, msg, console);
             }
-        }
-    } catch(err) {
+        } catch(err) {
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
         console.log(err);
         //this shit's supposed to run when the bot crashes or whatever: did I remember all failsafes?
