@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
+const fetch = require('node-fetch');
 const fs = require("fs");
 const ess = require("./essentials.js");
 const voice = require('@discordjs/voice');
@@ -8,15 +9,21 @@ const { join } = require("node:path");
 const { allowedNodeEnvironmentFlags } = require("process");
 const { request } = require('http');
 const xml = require("xmlhttprequest");
-const fetch = require('node-fetch');
+//for the play command
 const { joinVoiceChannel, createAudioPlayer, createAudioResource } = require('@discordjs/voice');
 const ytdl = require('ytdl-core-discord');
 const { Client } = require('discord.js');
 const soundcloud = require('soundcloud-downloader').default;
 const spotifyUri = require('spotify-uri');
-//const openai = require('openai');
-//const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
-//openai.apiKey = openaiApiKey;
+//weather
+const wfoUrl = 'https://api.weather.gov/products/types/WFO/locations/{location}/issues/latest';
+const spcUrl = 'https://api.weather.gov/products/types/SPC/locations/{location}/issues/latest';
+const radarUrl = 'https://radar.weather.gov/ridge/lite/{id}_loop.gif';
+const alertsUrl = 'https://www.weather.gov/images/hazards/';
+//OpenAI ChatGPT
+const openai = require('openai');
+const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
+openai.apiKey = openaiApiKey;
 const { exec } = require('child_process');
 const DEFAULT_SAMPLE_RATE = 8000;
 const DEFAULT_DURATION = 30;
