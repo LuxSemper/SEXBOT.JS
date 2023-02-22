@@ -269,7 +269,7 @@ client.on("messageCreate", async (msg) => {
               return msg.reply('You need to be in a voice channel to play music!');
             }
           //args is not defined?
-//            const args = message.content.split(' ');
+//            const args = msg.content.split(' ');
             if (args.length < 3) {
               return msg.reply('Please provide a valid music link!');
             }
