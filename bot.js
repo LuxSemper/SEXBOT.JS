@@ -262,6 +262,13 @@ client.on("messageCreate", async (msg) => {
             }
           }       
           
+          if (msg.content.includes('~uwu')) {
+            if (message.content.match(/[lr]/gi)) {
+                const modifiedContent = message.content.replace(/[lr]/gi, 'w');
+                message.channel.send(`${modifiedContent}`);
+              }}
+
+
             if (msg.content.startsWith.toLowerCase('~play')) return;
           
             const voiceChannel = msg.member?.voice.channel;
@@ -269,7 +276,7 @@ client.on("messageCreate", async (msg) => {
               return msg.reply('You need to be in a voice channel to play music!');
             }
           //args is not defined?
-//            const args = msg.content.split(' ');
+         // const args = msg.content.split(' ');
             if (args.length < 3) {
               return msg.reply('Please provide a valid music link!');
             }
