@@ -17,6 +17,10 @@ const spotifyUri = require('spotify-uri');
 //const openai = require('openai');
 //const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
 //openai.apiKey = openaiApiKey;
+const { exec } = require('child_process');
+const DEFAULT_SAMPLE_RATE = 8000;
+const DEFAULT_DURATION = 30;
+
 const mainDate = new Date();
 
 //const botIntent = new Discord.Intents();
@@ -332,36 +336,27 @@ client.on("messageCreate", async (msg) => {
 //            console.log(logData);
 //          });
 
-//bytebeat
             if (!msg.content.startsWith('~bytebeat')) return;
 
-                const args = msg.content.split(' ');
-                    if (args.length < 4) {
-                      return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
-                }
+              const args = msg.content.split(' ');
+              const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
+              const duration = parseFloat(args[2]) || DEFAULT_DURATION;
+              const code = args.slice(3).join(' ');
 
-                const code = args.slice(3).join(' ');
-                const sampleRate = parseInt(args[1]);
-                const duration = parseFloat(args[2]);
+              if (isNaN(sampleRate) || isNaN(duration) || !code) {
+                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+              }
 
-                if (isNaN(sampleRate) || isNaN(duration)) {
-                  return msg.reply('Please provide valid sample rate and duration!');
-                }
+              const audioFilePath = './audio/btb.wav';
+              exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
+                if (error || stderr) {
+                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
+               }
+              });
+            }
 
-          // Generate the audio file using bytebeat code
-          
-//          const audioFilePath = './audio/bytebeat.wav';
-//          exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {
-//            if (error) {
-//              return msg.reply('An error occurred while generating the audio file. `Error: ${error.msg}`');
-//            }
-//            if (stderr) {
-//              return msg.reply('An error occurred while generating the audio file.');
-//            }
-//            console.log(`Generated audio file: ${audioFilePath}`);
-
-
-        if (msg.content.startsWith("~vote ")) {
+//why am I getting an error here?
+        if (msg.content.startsWith("~vote")) {
             if (msg.guild.ownerId != client.user.id) {
                 msg.reply(">///< Nagasaki just happened where I live. Report this issue to Fluffery");
                 return;
