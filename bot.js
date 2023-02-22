@@ -1,4 +1,4 @@
-const discord = require('discord.js');
+const Discord = require('discord.js');
 const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
 const fs = require("fs");
 const ess = require("./essentials.js");
@@ -52,6 +52,10 @@ client.on("messageCreate", async (msg) => {
                     chan.send(msg.content.slice((6+(splt[1].length))));
                 }
             }
+        }
+
+        if (msg.content.toLowerCase().startsWith('~help')) {
+            msg.reply("__**All Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.\n`~ping` - Developer Command to see how much latency there is\n`~whopper` - shitpost whopper meme\n `~kidnap`- kidnaps you cutely (SATIRE) \n `~shibe`  - gets you shibe pics \n `~cat` - gets you kitty cat pics \n `~bird` - gets you birdie pictures \n `~eval [code]` - evaluate math expression \n `~trace [height] [width] [code] `- Render image from code\n `~animate [height] [width] [frames] [code]` - animate render from code \n `~bytebeat [samplerate] [duration] [code]` - Render audio from code \n `~gpt [query]` - queries ChatGPT");
         }
 
         if (msg.content.toLocaleLowerCase().startsWith('~valentine ')) {
@@ -264,8 +268,8 @@ client.on("messageCreate", async (msg) => {
             if (!voiceChannel) {
               return msg.reply('You need to be in a voice channel to play music!');
             }
-          
-            const args = message.content.split(' ');
+          //args is not defined?
+//            const args = message.content.split(' ');
             if (args.length < 3) {
               return msg.reply('Please provide a valid music link!');
             }
@@ -317,9 +321,9 @@ client.on("messageCreate", async (msg) => {
               }
             });
           
-            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
-            console.log(logData);
-          });
+//            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
+//            console.log(logData);
+//          });
 
 //bytebeat
             if (!msg.content.startsWith('~bytebeat')) return;
@@ -414,7 +418,8 @@ client.on("messageCreate", async (msg) => {
                 msg.channel.send({files: [{ attachment: "logs.txt" }]});
                 ess.timeAndUInfoLog(ess, msg, console);
             }
-        } catch(err) {
+        } 
+    } catch(err) {
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
         console.log(err);
         //this shit's supposed to run when the bot crashes or whatever: did I remember all failsafes?
