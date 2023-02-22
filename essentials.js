@@ -49,19 +49,18 @@ exports.lsts = [
         ess.items.nword,
         ess.items.arrow,
         ess.items.rope,
-        ess.items.armband,
+        ess.items.gamephone
     ],
     [
         ess.items.flask,
         ess.items.guysex,
         ess.items.trophy,
         ess.items.cyanide,
-        ess.items.gamephone,
-        ess.items.plug
+        ess.items.plug,
+        ess.items.cross
     ],
     [
         ess.items.totem,
-        ess.items.cross,
         ess.items.mummy
     ]
 ];
