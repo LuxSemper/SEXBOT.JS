@@ -1,7 +1,6 @@
 # Improvised Virtual Private Server Nuclear Warhead
-fuuga
 
-![](images/fuuga.png)
+![](images/fuuga.png) Also named Fuuga :3
 
 # todo
 
