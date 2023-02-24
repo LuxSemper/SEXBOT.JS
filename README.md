@@ -1,7 +1,7 @@
 # Improvised Virtual Private Server Nuclear Warhead
 fuuga
 
-[](https://github.com/flufferyomada/fuuga/images/fuuga.png)
+[fuuga](https://github.com/flufferyomada/fuuga/images/fuuga.png)
 
 # todo
 
