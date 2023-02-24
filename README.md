@@ -12,7 +12,7 @@ fuuga
 
 ~play
 
-###
+### very soon and likely
 
 ~ship
 
@@ -36,7 +36,7 @@ this is because they use javascript to run the commands and could potentially be
 
 ~profile
 
-@@@ requested 
+### requested 
 
 sexual harassment, i do not want to do this but he is a bitch
 
