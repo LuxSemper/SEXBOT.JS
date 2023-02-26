@@ -11,7 +11,7 @@
 
 ~spc
 
-~play
+~music shit
 
 ### very soon and likely
 
@@ -36,3 +36,19 @@ this is because they use javascript to run the commands and could potentially be
 ### requires research
 
 ~profile
+
+modlogs in a channel
+
+### janny
+
+ban
+
+kick
+
+warn
+
+giveaway [pause/end/start]
+
+
+
+### after features are added make the replys look nicer, via embeds
