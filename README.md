@@ -4,22 +4,29 @@
 
 # todo
 
-### likely soon but require some work
 ~gpt
 
 ~nws
 
 ~spc
 
-~music shit
-
-### very soon and likely
-
 ~ship
 
 ~coinflip
 
 ~rockpaperscizzors
+
+~profile
+
+modlogs in a channel
+
+ban
+
+kick
+
+warn
+
+giveaway [pause/end/start]
 
 ### concerns for security and vulverability status 
 
@@ -32,22 +39,6 @@
 ~trace
 
 this is because they use javascript to run the commands and could potentially be used to backdoor the server or host machine that the bot is being hosted on or in general crash it
-
-### requires research
-
-~profile
-
-modlogs in a channel
-
-### janny
-
-ban
-
-kick
-
-warn
-
-giveaway [pause/end/start]
 
 
 
