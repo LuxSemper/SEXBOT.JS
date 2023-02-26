@@ -20,10 +20,6 @@
 
 modlogs in a channel
 
-ban
-
-kick
-
 warn
 
 giveaway [pause/end/start]
