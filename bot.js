@@ -11,7 +11,7 @@ const { request } = require('http');
 const xml = require("xmlhttprequest");
 //for the play command
 const { joinVoiceChannel, createAudioPlayer, createAudioResource } = require('@discordjs/voice');
-const ytdl = require('ytdl-core-discord');
+const ytdl = require('ytdl-core');
 const { Client } = require('discord.js');
 const soundcloud = require('soundcloud-downloader').default;
 const spotifyUri = require('spotify-uri');
@@ -24,6 +24,9 @@ const alertsUrl = 'https://www.weather.gov/images/hazards/';
 const openai = require('openai');
 const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
 openai.apiKey = openaiApiKey;
+
+let dispatcher;
+let queue = [];
 const { exec } = require('child_process');
 const DEFAULT_SAMPLE_RATE = 8000;
 const DEFAULT_DURATION = 30;
@@ -283,7 +286,49 @@ client.on("messageCreate", async (msg) => {
                 message.channel.send(`${modifiedContent}`);
               }}
 
+              if (msg.content.startsWith.toLowerCase()('~music'))
+              if (splt[1] == "play") {
+                const voiceChannel = msg.member.voice.channel;
+                if (!voiceChannel) return msg.reply('Please join a voice channel first!');
+            
+                const song = msg.content.split(' ').slice(1).join(' ');
+            
+                if (!dispatcher) {
+                  voiceChannel.join().then(connection => {
+                    queue.push(song);
+                    playSong(connection, msg);
+                  });
+                } else {
+                  queue.push(song);
+                  msg.reply('Song added to the queue!');
+                }
+              }
+              if (splt[1] == "stop") {
+                const voiceChannel = msg.member.voice.channel;
+                if (!voiceChannel) return msg.reply('Please join a voice channel first!');
+            
+                queue = [];
+                dispatcher.end();
+                voiceChannel.leave();
+              };
 
+              if (splt[1] == '!skip') {
+                if (!dispatcher) return msg.reply('Nothing is playing to skip.');
+                dispatcher.end();
+              }
+
+            function playSong(connection, msg) {
+                if (!queue.length) {
+                 msg.reply('All songs have been played. Queue is empty!');
+                  connection.disconnect();
+                  return;
+                }
+  
+            const stream = ytdl(queue.shift(), { filter: 'audioonly' });
+                dispatcher = connection.play(stream);
+  
+                dispatcher.on('finish', () => playSong(connection, msg));
+              }
           
 //            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
 //            console.log(logData);
@@ -348,9 +393,9 @@ client.on("messageCreate", async (msg) => {
                     );
                 }
             }
-        }
         
        // not sure the purpose of this is but commenting it out until i do know and can fix it  
+
        // if (msg.content.startsWith("~flash")) {
        //     return;
        //     if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
@@ -376,6 +421,7 @@ client.on("messageCreate", async (msg) => {
 //                ess.timeAndUInfoLog(ess, msg, console);
 //            }
 //        } 
+
     } catch(err) {
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
         console.log(err);
