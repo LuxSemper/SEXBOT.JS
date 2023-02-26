@@ -48,7 +48,7 @@ client.on('ready', () => {
     client.user.setActivity(
         "~help", 
         {
-            type : Discord.ActivityType.Watching,
+            type : Discord.ActivityType.Playing,
         }
     );
     ess.logon(client);
