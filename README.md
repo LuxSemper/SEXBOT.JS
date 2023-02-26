@@ -36,25 +36,3 @@ this is because they use javascript to run the commands and could potentially be
 ### requires research
 
 ~profile
-
-### requested 
-
-sexual harassment, i do not want to do this, soo trash bim
-
-# vunerabilities
-
-Impact
-
-undici library does not protect host HTTP header from CRLF injection vulnerabilities.
-Patches
-
-This issue was patched in Undici v5.19.1.
-Workarounds
-
-Sanitize the headers.host string before passing to undici.
-References
-
-Reported at https://hackerone.com/reports/1820955.
-Credits
-
-Thank you to Zhipeng Zhang (@timon8) for reporting this vulnerability.
