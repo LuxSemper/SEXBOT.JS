@@ -10,12 +10,6 @@
 
 ~spc
 
-~ship
-
-~coinflip
-
-~rockpaperscizzors
-
 ~profile
 
 modlogs in a channel
