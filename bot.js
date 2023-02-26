@@ -229,6 +229,10 @@ client.on("messageCreate", async (msg) => {
             msg.reply(`Pong! **(${Date.now() - msg.createdTimestamp}ms)**`)
             return;
         }
+        if (msg.content.toLowerCase().startsWith('~coinflip')) {
+            msg.reply(`:moneybag: It landed on **${Math.random() >= 0.5 ? 'heads' : 'tails'}**!`);
+            return;
+        }    
         if (msg.content.toLocaleLowerCase().startsWith(`femboy`))  { 
             msg.reply("uwu");
             return;
@@ -361,6 +365,8 @@ client.on("messageCreate", async (msg) => {
                }
               });
             }
+            
+                msg.reply(`:moneybag: It landed on **${Math.random() >= 0.5 ? 'heads' : 'tails'}**!`);
 
 //why am I getting an error here?
         if (msg.content.startsWith("~vote")) {
