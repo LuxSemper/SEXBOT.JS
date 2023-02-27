@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
+const fetch = require('node-fetch');
 const fs = require("fs");
 const ess = require("./essentials.js");
 const voice = require('@discordjs/voice');
@@ -8,16 +9,37 @@ const { join } = require("node:path");
 const { allowedNodeEnvironmentFlags } = require("process");
 const { request } = require('http');
 const xml = require("xmlhttprequest");
-const fetch = require('node-fetch');
-//const openai = require('openai');
-//const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
-//openai.apiKey = openaiApiKey;
+//for the play command
+const { joinVoiceChannel, createAudioPlayer, createAudioResource } = require('@discordjs/voice');
+const ytdl = require('ytdl-core');
+const { Client } = require('discord.js');
+const soundcloud = require('soundcloud-downloader').default;
+const spotifyUri = require('spotify-uri');
+//weather
+const wfoUrl = 'https://api.weather.gov/products/types/WFO/locations/{location}/issues/latest';
+const spcUrl = 'https://api.weather.gov/products/types/SPC/locations/{location}/issues/latest';
+const radarUrl = 'https://radar.weather.gov/ridge/lite/{id}_loop.gif';
+const alertsUrl = 'https://www.weather.gov/images/hazards/';
+//OpenAI ChatGPT
+const openai = require('openai');
+const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
+openai.apiKey = openaiApiKey;
+
+let dispatcher;
+let queue = [];
+const { exec } = require('child_process');
+const DEFAULT_SAMPLE_RATE = 8000;
+const DEFAULT_DURATION = 30;
+
 const mainDate = new Date();
 
 //const botIntent = new Discord.Intents();
 //prolly old api i forgor why remove
 
 var botIntent = [];
+//botIntent.add(Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS, Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_MESSAGE_TYPING, Discord.Intents.FLAGS.DIRECT_MESSAGES, Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING);
+//javascript sex broke or something
+
 botIntent.push(Discord.IntentsBitField.Flags.GuildBans, Discord.IntentsBitField.Flags.GuildMessages, Discord.IntentsBitField.Flags.GuildMembers, Discord.IntentsBitField.Flags.GuildPresences, Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.MessageContent, Discord.IntentsBitField.Flags.GuildMessageTyping, Discord.IntentsBitField.Flags.GuildIntegrations, Discord.IntentsBitField.Flags.Guilds);
 const client = new Discord.Client({ intents: botIntent });
 
@@ -26,7 +48,7 @@ client.on('ready', () => {
     client.user.setActivity(
         "~help", 
         {
-            type : Discord.ActivityType.Watching,
+            type : Discord.ActivityType.Playing,
         }
     );
     ess.logon(client);
@@ -44,6 +66,10 @@ client.on("messageCreate", async (msg) => {
                     chan.send(msg.content.slice((6+(splt[1].length))));
                 }
             }
+        }
+
+        if (msg.content.toLowerCase().startsWith('~help')) {
+            msg.reply("__**All Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.\n`~ping` - Developer Command to see how much latency there is\n`~whopper` - shitpost whopper meme\n `~kidnap`- kidnaps you cutely (SATIRE) \n `~shibe`  - gets you shibe pics \n `~cat` - gets you kitty cat pics \n `~bird` - gets you birdie pictures \n `~eval [code]` - evaluate math expression \n `~trace [height] [width] [code] `- Render image from code\n `~animate [height] [width] [frames] [code]` - animate render from code \n `~bytebeat [samplerate] [duration] [code]` - Render audio from code \n `~gpt [query]` - queries ChatGPT");
         }
 
         if (msg.content.toLocaleLowerCase().startsWith('~valentine ')) {
@@ -75,7 +101,9 @@ client.on("messageCreate", async (msg) => {
             if (msg.mentions.members.first()) {
                 if (msg.mentions.members.at(1)) {
                     if (msg.mentions.members.at(1).id.toString() === "422438661993529364") {
-                        const tm3 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat(((Math.floor(Math.random() * 52)-1)+55).toString().concat("%`\n(Ejaculation Within `".concat(((Math.floor(Math.random() * 25))+30).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
+                        const tm3 = setTimeout(function() { 
+                            if (!msg) { return;
+                             } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat(((Math.floor(Math.random() * 52)-1)+55).toString().concat("%`\n(Ejaculation Within `".concat(((Math.floor(Math.random() * 25))+30).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
                     } else {
                         const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
                     }
@@ -204,6 +232,10 @@ client.on("messageCreate", async (msg) => {
             msg.reply(`Pong! **(${Date.now() - msg.createdTimestamp}ms)**`)
             return;
         }
+        if (msg.content.toLowerCase().startsWith('~coinflip')) {
+            msg.reply(`:moneybag: It landed on **${Math.random() >= 0.5 ? 'heads' : 'tails'}**!`);
+            return;
+        }    
         if (msg.content.toLocaleLowerCase().startsWith(`femboy`))  { 
             msg.reply("uwu");
             return;
@@ -247,13 +279,83 @@ client.on("messageCreate", async (msg) => {
               msg.reply('>///< Oops! Something went wrong while getting your birb');
             }
           }       
+          
+          if (msg.content.includes('~uwu')) {
+            if (message.content.match(/[lr]/gi)) {
+                const modifiedContent = message.content.replace(/[lr]/gi, 'w');
+                message.channel.send(`${modifiedContent}`);
+              }}
 
-        if (msg.content.toLowerCase().startsWith('~help')) {
-            msg.reply("__**All Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.\n`~ping` - Developer Command to see how much latency there is\n`~whopper` - shitpost whopper meme\n \n __**To do Commands**__ \n `~eval [code]` - evaluate math expression \n `~trace [height] [width] [code] `- Render image from code\n `~animate [height] [width] [frames] [code]` - animate render from code \n `~bytebeat [samplerate] [duration] [code]` - Render audio from code");
-        }
-        if (msg.content.startsWith("~vote ")) {
-            if (msg.guild.ownerId != client.user.id) {
-                msg.reply(">///< Nagasaki just happened where I live. Report this issue to Fluffery");
+              if (msg.content.startsWith.toLowerCase()('~music'))
+              if (splt[1] == "play") {
+                const voiceChannel = msg.member.voice.channel;
+                if (!voiceChannel) return msg.reply('Please join a voice channel first!');
+            
+                const song = msg.content.split(' ').slice(1).join(' ');
+            
+                if (!dispatcher) {
+                  voiceChannel.join().then(connection => {
+                    queue.push(song);
+                    playSong(connection, msg);
+                  });
+                } else {
+                  queue.push(song);
+                  msg.reply('Song added to the queue!');
+                }
+              }
+              if (splt[1] == "stop") {
+                const voiceChannel = msg.member.voice.channel;
+                if (!voiceChannel) return msg.reply('Please join a voice channel first!');
+            
+                queue = [];
+                dispatcher.end();
+                voiceChannel.leave();
+              };
+
+              if (splt[1] == '!skip') {
+                if (!dispatcher) return msg.reply('Nothing is playing to skip.');
+                dispatcher.end();
+              }
+
+            function playSong(connection, msg) {
+                if (!queue.length) {
+                 msg.reply('All songs have been played. Queue is empty!');
+                  connection.disconnect();
+                  return;
+                }
+  
+            const stream = ytdl(queue.shift(), { filter: 'audioonly' });
+                dispatcher = connection.play(stream);
+  
+                dispatcher.on('finish', () => playSong(connection, msg));
+              }
+          
+//            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
+//            console.log(logData);
+//          });
+
+          //  if (!msg.content.startsWith('~bytebeat')) return;
+//
+//              const args = msg.content.split(' ');
+//              const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
+//              const duration = parseFloat(args[2]) || DEFAULT_DURATION;
+//              const code = args.slice(3).join(' ');
+//
+//              if (isNaN(sampleRate) || isNaN(duration) || !code) {
+//                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+//              }
+//
+//              const audioFilePath = './audio/btb.wav';
+//              exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
+//                if (error || stderr) {
+//                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
+//               }
+//              });
+//            }
+
+        if (msg.content.startsWith('~vote')) {
+            if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator) != client.user.id) {
+                msg.reply(">///< Nagasaki just happened where I live. Bot is not the owner of the server therefore the command doesnt work");
                 return;
             }
             const splt = msg.content.split(" ");
@@ -273,7 +375,7 @@ client.on("messageCreate", async (msg) => {
                         }, 21600000
                     );
                 }
-            }
+            }}
             if ((splt[1]) == "ban") {
                 var initLogData = ess.timeAndUInfoLog(ess, msg, console);
                 fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
@@ -291,31 +393,35 @@ client.on("messageCreate", async (msg) => {
                     );
                 }
             }
-        }
-        if (msg.content.startsWith("~flash")) {
-            return;
-            //patched sex not loading due to shitty scripting
-            if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
-                ess.timeAndUInfoLog(ess, msg, console);
-                fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
-                if (msg.mentions.users.first()) {
-                    if (!msg.mentions.users.has(client.user) && msg.mentions.everyone == false && msg.mentions.repliedUser == null && ess.isBot(msg.mentions.users) == false) {
-                        ess.locateFlashable(msg.mentions.users, msg.mentions.members, ess.sets);
-                    }
-                }
-            }
-        }
-        if (msg.content.startsWith("~logfile")) {
-            if (msg.guild.ownerId != client.user.id) {
-                msg.reply(">///< - Hiroshima just occured at my house, Report this issue to Fluffery");
-                return;
-            }
-            //set to only work for administrators, but ig that shit isn't gonna work lmfao
-            if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
-                msg.channel.send({files: [{ attachment: "logs.txt" }]});
-                ess.timeAndUInfoLog(ess, msg, console);
-            }
-        }
+        
+       // not sure the purpose of this is but commenting it out until i do know and can fix it  
+
+       // if (msg.content.startsWith("~flash")) {
+       //     return;
+       //     if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
+       //         ess.timeAndUInfoLog(ess, msg, console);
+       //         fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
+       //         if (msg.mentions.users.first()) {
+       //             if (!msg.mentions.users.has(client.user) && msg.mentions.everyone == false && msg.mentions.repliedUser == null && ess.isBot(msg.mentions.users) == false) {
+       //                 ess.locateFlashable(msg.mentions.users, msg.mentions.members, ess.sets);
+       //             }
+       //         }
+       //     }
+       // }
+
+       // different issue 
+//        if (msg.content.startsWith("~logfile")) {
+//            if (msg.guild.ownerId != client.user.id) {
+//                msg.reply(">///< - Hiroshima just occured at my house, Report this issue to Fluffery");
+//                return;
+//            }
+//            //set to only work for administrators, but ig that shit isn't gonna work lmfao
+//            if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
+//                msg.channel.send({files: [{ attachment: "logs.txt" }]});
+//                ess.timeAndUInfoLog(ess, msg, console);
+//            }
+//        } 
+
     } catch(err) {
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
         console.log(err);
