@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
+const { EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
 const fetch = require('node-fetch');
 const fs = require("fs");
 const ess = require("./essentials.js");
@@ -98,7 +98,21 @@ client.on("messageCreate", async (msg) => {
         }
         if (msg.content.toLowerCase().startsWith('~sex')) {
             const tm = setTimeout(function() { msg.reply({content: "Sexing - Please Wait..."}); }, 10);
-            const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
+            if (msg.mentions.members.first()) {
+                if (msg.mentions.members.at(1)) {
+                    if (msg.mentions.members.at(1).id.toString() === "422438661993529364") {
+                        const tm3 = setTimeout(function() { 
+                            if (!msg) { return;
+                             } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat(((Math.floor(Math.random() * 52)-1)+55).toString().concat("%`\n(Ejaculation Within `".concat(((Math.floor(Math.random() * 25))+30).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
+                    } else {
+                        const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
+                    }
+                } else {
+                    console.log("Sorta Legit Version");
+                    const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
+                }
+            } else {
+                const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000); 
         }
         if (msg.content.toLowerCase().startsWith('~shop')) {
             const splt = msg.content.split(" ");
@@ -272,14 +286,14 @@ client.on("messageCreate", async (msg) => {
               }}
 
               if (msg.content.startsWith.toLowerCase()('~music')) {
-                const splt = msg.content.split(" ");
               if (splt[1] == "play") {
-                const voiceChannel = msg.member.voice.channel;
+                const connection = voice.joinVoiceChannel({ channelId: msg.member.voice.channelId, guildId: msg.guildId, adapterCreator: msg.guild.voiceAdapterCreator});
                 if (!voiceChannel) return msg.reply('Please join a voice channel first!');
             
                 const song = msg.content.split(' ').slice(1).join(' ');
             
                 if (!dispatcher) {
+
                   voiceChannel.join().then(connection => {
                     queue.push(song);
                     playSong(connection, msg);
@@ -290,7 +304,7 @@ client.on("messageCreate", async (msg) => {
                 }
               }
               if (splt[1] == "stop") {
-                const voiceChannel = msg.member.voice.channel;
+                const connection = voice.joinVoiceChannel({ channelId: msg.member.voice.channelId, guildId: msg.guildId, adapterCreator: msg.guild.voiceAdapterCreator});
                 if (!voiceChannel) return msg.reply('Please join a voice channel first!');
             
                 queue = [];
@@ -298,11 +312,10 @@ client.on("messageCreate", async (msg) => {
                 voiceChannel.leave();
               };
 
-              if (splt[1] == 'skip') {
+              if (splt[1] == '!skip') {
                 if (!dispatcher) return msg.reply('Nothing is playing to skip.');
                 dispatcher.end();
               }
-            }
 
             function playSong(connection, msg) {
                 if (!queue.length) {
@@ -316,27 +329,44 @@ client.on("messageCreate", async (msg) => {
   
                 dispatcher.on('finish', () => playSong(connection, msg));
               }
-          
-//            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
-//            console.log(logData);
-//          });
+        }
+            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
+            console.log(logData);
 
-        if (msg.content.startsWith('~bytebeat')) {
+            if (msg.content.startsWith('~bytebeat')) {
               const args = msg.content.split(' ');
               const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
               const duration = parseFloat(args[2]) || DEFAULT_DURATION;
               const code = args.slice(3).join(' ');
+
               if (isNaN(sampleRate) || isNaN(duration) || !code) {
                 return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
               }
+
               const audioFilePath = './audio/btb.wav';
               exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
                 if (error || stderr) {
                   return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
-                }
+               }
               });
-        }
-        
+            }
+
+              const args = msg.content.split(' ');
+              const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
+              const duration = parseFloat(args[2]) || DEFAULT_DURATION;
+              const code = args.slice(3).join(' ');
+
+              if (isNaN(sampleRate) || isNaN(duration) || !code) {
+                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+              }
+
+              const audioFilePath = './audio/btb.wav';
+              exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
+                if (error || stderr) {
+                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
+               }
+              });
+
         if (msg.content.startsWith('~vote')) {
             if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator) != client.user.id) {
                 msg.reply(">///< Nagasaki just happened where I live. Bot is not the owner of the server therefore the command doesnt work");
@@ -378,35 +408,35 @@ client.on("messageCreate", async (msg) => {
                 }
             }
         
-       // not sure the purpose of this is but commenting it out until i do know and can fix it  
+       // ref for nuke 
 
-       // if (msg.content.startsWith("~flash")) {
-       //     return;
-       //     if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
-       //         ess.timeAndUInfoLog(ess, msg, console);
-       //         fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
-       //         if (msg.mentions.users.first()) {
-       //             if (!msg.mentions.users.has(client.user) && msg.mentions.everyone == false && msg.mentions.repliedUser == null && ess.isBot(msg.mentions.users) == false) {
-       //                 ess.locateFlashable(msg.mentions.users, msg.mentions.members, ess.sets);
-       //             }
-       //         }
-       //     }
-       // }
+        //if (msg.content.startsWith("~flash")) {
+        //    return;
+        //    if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
+        //        ess.timeAndUInfoLog(ess, msg, console);
+        //        fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
+        //        if (msg.mentions.users.first()) {
+        //            if (!msg.mentions.users.has(client.user) && msg.mentions.everyone == false && msg.mentions.repliedUser == null && ess.isBot(msg.mentions.users) == false) {
+        //                ess.locateFlashable(msg.mentions.users, msg.mentions.members, ess.sets);
+        //            }
+        //        }
+        //    }
+        //}
 
        // different issue 
-//        if (msg.content.startsWith("~logfile")) {
-//            if (msg.guild.ownerId != client.user.id) {
-//                msg.reply(">///< - Hiroshima just occured at my house, Report this issue to Fluffery");
-//                return;
-//            }
-//            //set to only work for administrators, but ig that shit isn't gonna work lmfao
-//            if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
-//                msg.channel.send({files: [{ attachment: "logs.txt" }]});
-//                ess.timeAndUInfoLog(ess, msg, console);
-//            }
-//        } 
+        if (msg.content.startsWith("~logfile")) {
+            if (msg.guild.ownerId != client.user.id) {
+                msg.reply(">///< - Hiroshima just occured at my house, Report this issue to Fluffery");
+                return;
+            }
+            //set to only work for administrators, but ig that shit isn't gonna work lmfao
+             if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
+                msg.channel.send({files: [{ attachment: "logs.txt" }]});
+                ess.timeAndUInfoLog(ess, msg, console);
+            }
+        } 
 
-    } catch(err) {
+    }} catch(err) {
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
         console.log(err);
         //this shit's supposed to run when the bot crashes or whatever: did I remember all failsafes?
