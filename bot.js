@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
+const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
 const fetch = require('node-fetch');
 const fs = require("fs");
 const ess = require("./essentials.js");
@@ -112,8 +112,7 @@ client.on("messageCreate", async (msg) => {
                     const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
                 }
             } else {
-                const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
-            }
+                const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000); 
         }
         if (msg.content.toLowerCase().startsWith('~shop')) {
             const splt = msg.content.split(" ");
@@ -286,49 +285,64 @@ client.on("messageCreate", async (msg) => {
                 message.channel.send(`${modifiedContent}`);
               }}
 
-              if (msg.content.startsWith.toLowerCase()('~music'))
-              if (splt[1] == "play") {
-                const voiceChannel = msg.member.voice.channel;
-                if (!voiceChannel) return msg.reply('Please join a voice channel first!');
-            
-                const song = msg.content.split(' ').slice(1).join(' ');
-            
-                if (!dispatcher) {
-                  voiceChannel.join().then(connection => {
-                    queue.push(song);
-                    playSong(connection, msg);
-                  });
-                } else {
-                  queue.push(song);
-                  msg.reply('Song added to the queue!');
-                }
-              }
-              if (splt[1] == "stop") {
-                const voiceChannel = msg.member.voice.channel;
-                if (!voiceChannel) return msg.reply('Please join a voice channel first!');
-            
-                queue = [];
-                dispatcher.end();
-                voiceChannel.leave();
-              };
+              if (msg.content.startsWith.toLowerCase('~play')) return;
 
-              if (splt[1] == '!skip') {
-                if (!dispatcher) return msg.reply('Nothing is playing to skip.');
-                dispatcher.end();
+              const voiceChannel = msg.member?.voice.channel;
+              if (!voiceChannel) {
+                return msg.reply('You need to be in a voice channel to play music!');
               }
-
-            function playSong(connection, msg) {
-                if (!queue.length) {
-                 msg.reply('All songs have been played. Queue is empty!');
-                  connection.disconnect();
-                  return;
+            //args is not defined?
+            const args = msg.content.split(' ');
+              if (args.length < 3) {
+                return msg.reply('Please provide a valid music link!');
+              }
+  
+              const videoUrl = args[2];
+              let stream = null;
+              let source = '';
+              if (videoUrl.includes('youtube.com')) {
+                stream = await ytdl(videoUrl, { filter: 'audioonly', opusEncoded: true });
+                source = 'YouTube';
+              } else if (videoUrl.includes('soundcloud.com')) {
+                const trackInfo = await soundcloud.getInfo(videoUrl);
+                const trackUrl = await soundcloud.downloadFormat(trackInfo, {
+                  format: soundcloud.FORMATS.OPUS,
+                  opusEncoded: true,
+                });
+                stream = await ytdl(trackUrl, { opusEncoded: true });
+                source = 'SoundCloud';
+              } else if (videoUrl.includes('spotify.com')) {
+                try {
+                  const { id } = spotifyUri.parse(videoUrl);
+                  const trackInfo = await spotifyUri.getData(id);
+                  const trackUrl = trackInfo.preview_url;
+                  stream = await ytdl(trackUrl, { opusEncoded: true });
+                  source = 'Spotify';
+                } catch (err) {
+                  console.error(err);
+                  return message.reply('Could not find the track on Spotify!');
                 }
-  
-            const stream = ytdl(queue.shift(), { filter: 'audioonly' });
-                dispatcher = connection.play(stream);
-  
-                dispatcher.on('finish', () => playSong(connection, msg));
+              } else if (videoUrl.endsWith('.mp3')) {
+                stream = fs.createReadStream(videoUrl);
+                source = 'Local MP3';
+              } else {
+                return message.reply('Please provide a valid music link!');
               }
+  
+              const connection = joinVoiceChannel({
+                channelId: voiceChannel.id,
+                guildId: message.guild.id,
+                adapterCreator: message.guild.voiceAdapterCreator,
+              });
+              const resource = createAudioResource(stream);
+              const player = createAudioPlayer();
+              connection.subscribe(player);
+              player.play(resource);
+              player.on('stateChange', (oldState, newState) => {
+                if (newState.status === 'idle') {
+                  connection.destroy();
+                }
+              });
           
             const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
             console.log(logData);
@@ -436,7 +450,7 @@ client.on("messageCreate", async (msg) => {
             }
         } 
 
-    } catch(err) {
+    }} catch(err) {
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
         console.log(err);
         //this shit's supposed to run when the bot crashes or whatever: did I remember all failsafes?
