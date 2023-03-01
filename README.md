@@ -12,6 +12,12 @@
 
 ~profile
 
+~ship
+
+~coinflip
+
+~rockpaperscizzors
+
 modlogs in a channel
 
 warn
