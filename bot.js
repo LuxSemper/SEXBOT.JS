@@ -334,25 +334,22 @@ client.on("messageCreate", async (msg) => {
 //            console.log(logData);
 //          });
 
-          //  if (!msg.content.startsWith('~bytebeat')) return;
-//
-//              const args = msg.content.split(' ');
-//              const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
-//              const duration = parseFloat(args[2]) || DEFAULT_DURATION;
-//              const code = args.slice(3).join(' ');
-//
-//              if (isNaN(sampleRate) || isNaN(duration) || !code) {
-//                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
-//              }
-//
-//              const audioFilePath = './audio/btb.wav';
-//              exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
-//                if (error || stderr) {
-//                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
-//               }
-//              });
-//            }
-
+        if (msg.content.startsWith('~bytebeat')) {
+              const args = msg.content.split(' ');
+              const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
+              const duration = parseFloat(args[2]) || DEFAULT_DURATION;
+              const code = args.slice(3).join(' ');
+              if (isNaN(sampleRate) || isNaN(duration) || !code) {
+                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+              }
+              const audioFilePath = './audio/btb.wav';
+              exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
+                if (error || stderr) {
+                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
+                }
+              });
+        }
+        
         if (msg.content.startsWith('~vote')) {
             if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator) != client.user.id) {
                 msg.reply(">///< Nagasaki just happened where I live. Bot is not the owner of the server therefore the command doesnt work");
