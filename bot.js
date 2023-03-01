@@ -102,7 +102,7 @@ client.on("messageCreate", async (msg) => {
                 if (!msg) { return; 
                 } 
                 msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
-
+//issue starts here
         if (msg.content.toLowerCase().startsWith('~shop')) {
             const splt = msg.content.split(" ");
             const pages = [ess.shopItemsString(ess, 0, msg), ess.shopItemsString(ess, 1, msg), ess.shopItemsString(ess, 2, msg)];
@@ -212,7 +212,7 @@ client.on("messageCreate", async (msg) => {
             msg.reply("https://cdn.discordapp.com/attachments/669796626784714756/1074666197611716699/TWD.mp4");
             return;
         }
-        if (msg.content.toLowerCase().startsWith('~kys')) {
+        if (msg.content.toLowerCase().startsWith('~kidnap')) {
             msg.reply('https://cdn.discordapp.com/attachments/723599467172986962/1074336826464145589/trim.90D66A28-3AA2-4D37-A744-A6FD591DA6F0.mov');
             return;
         }
@@ -281,20 +281,8 @@ client.on("messageCreate", async (msg) => {
          }   
          
          if (msg.content.toLocaleLowerCase().startsWith('~ship')) {
-            const user1 = msg.mentions.users.first();
-              const user2 = msg.mentions.users.last();
-              
-              // If either user is missing, return an error message
-              if (!user1 || !user2) {
-                return msg.reply('Please mention two users to ship!');
-              }
-              
-              // Generate a random ship name by combining the first half of the first user's name with the second half of the second user's name
-              const shipName = user1.username.slice(0, user1.username.length / 2) + user2.username.slice(user2.username.length / 2);
-              
-              // Return the ship name in a message
-              msg.reply(`<333 **${user1.username}** x **${user2.username}** = **${shipName}** <333`);
-            }
+            msg.reply("<333 <@"+msg.author.id+"> x <@"+msg.mentions.users.first().id+"> : "+(Math.floor(Math.random()*102)-1)+"% match.");
+         }
         
             if (msg.content.toLocaleLowerCase().startsWith('~rps')) {
                   const choices = ['rock', 'paper', 'scissors'];
