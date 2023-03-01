@@ -271,7 +271,8 @@ client.on("messageCreate", async (msg) => {
                 message.channel.send(`${modifiedContent}`);
               }}
 
-              if (msg.content.startsWith.toLowerCase()('~music'))
+              if (msg.content.startsWith.toLowerCase()('~music')) {
+                const splt = msg.content.split(" ");
               if (splt[1] == "play") {
                 const voiceChannel = msg.member.voice.channel;
                 if (!voiceChannel) return msg.reply('Please join a voice channel first!');
@@ -296,6 +297,7 @@ client.on("messageCreate", async (msg) => {
                 dispatcher.end();
                 voiceChannel.leave();
               };
+            }
 
               if (splt[1] == '!skip') {
                 if (!dispatcher) return msg.reply('Nothing is playing to skip.');
