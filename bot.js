@@ -394,7 +394,7 @@ client.on("messageCreate", async (msg) => {
                 }
             }
         
-       // not sure the purpose of this is but commenting it out until i do know and can fix it  
+       // ref for nuke 
 
        // if (msg.content.startsWith("~flash")) {
        //     return;
