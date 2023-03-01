@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
+const { EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
 const fetch = require('node-fetch');
 const fs = require("fs");
 const ess = require("./essentials.js");
