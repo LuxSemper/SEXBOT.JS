@@ -330,28 +330,42 @@ client.on("messageCreate", async (msg) => {
                 dispatcher.on('finish', () => playSong(connection, msg));
               }
           
-//            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
-//            console.log(logData);
-//          });
+            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
+            console.log(logData);
 
-          //  if (!msg.content.startsWith('~bytebeat')) return;
-//
-//              const args = msg.content.split(' ');
-//              const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
-//              const duration = parseFloat(args[2]) || DEFAULT_DURATION;
-//              const code = args.slice(3).join(' ');
-//
-//              if (isNaN(sampleRate) || isNaN(duration) || !code) {
-//                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
-//              }
-//
-//              const audioFilePath = './audio/btb.wav';
-//              exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
-//                if (error || stderr) {
-//                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
-//               }
-//              });
-//            }
+            if (msg.content.startsWith('~bytebeat')) {
+              const args = msg.content.split(' ');
+              const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
+              const duration = parseFloat(args[2]) || DEFAULT_DURATION;
+              const code = args.slice(3).join(' ');
+
+              if (isNaN(sampleRate) || isNaN(duration) || !code) {
+                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+              }
+
+              const audioFilePath = './audio/btb.wav';
+              exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
+                if (error || stderr) {
+                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
+               }
+              });
+            }
+
+              const args = msg.content.split(' ');
+              const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
+              const duration = parseFloat(args[2]) || DEFAULT_DURATION;
+              const code = args.slice(3).join(' ');
+
+              if (isNaN(sampleRate) || isNaN(duration) || !code) {
+                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+              }
+
+              const audioFilePath = './audio/btb.wav';
+              exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
+                if (error || stderr) {
+                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
+               }
+              });
 
         if (msg.content.startsWith('~vote')) {
             if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator) != client.user.id) {
@@ -396,31 +410,31 @@ client.on("messageCreate", async (msg) => {
         
        // ref for nuke 
 
-       // if (msg.content.startsWith("~flash")) {
-       //     return;
-       //     if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
-       //         ess.timeAndUInfoLog(ess, msg, console);
-       //         fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
-       //         if (msg.mentions.users.first()) {
-       //             if (!msg.mentions.users.has(client.user) && msg.mentions.everyone == false && msg.mentions.repliedUser == null && ess.isBot(msg.mentions.users) == false) {
-       //                 ess.locateFlashable(msg.mentions.users, msg.mentions.members, ess.sets);
-       //             }
-       //         }
-       //     }
-       // }
+        //if (msg.content.startsWith("~flash")) {
+        //    return;
+        //    if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
+        //        ess.timeAndUInfoLog(ess, msg, console);
+        //        fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
+        //        if (msg.mentions.users.first()) {
+        //            if (!msg.mentions.users.has(client.user) && msg.mentions.everyone == false && msg.mentions.repliedUser == null && ess.isBot(msg.mentions.users) == false) {
+        //                ess.locateFlashable(msg.mentions.users, msg.mentions.members, ess.sets);
+        //            }
+        //        }
+        //    }
+        //}
 
        // different issue 
-//        if (msg.content.startsWith("~logfile")) {
-//            if (msg.guild.ownerId != client.user.id) {
-//                msg.reply(">///< - Hiroshima just occured at my house, Report this issue to Fluffery");
-//                return;
-//            }
-//            //set to only work for administrators, but ig that shit isn't gonna work lmfao
-//            if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
-//                msg.channel.send({files: [{ attachment: "logs.txt" }]});
-//                ess.timeAndUInfoLog(ess, msg, console);
-//            }
-//        } 
+        if (msg.content.startsWith("~logfile")) {
+            if (msg.guild.ownerId != client.user.id) {
+                msg.reply(">///< - Hiroshima just occured at my house, Report this issue to Fluffery");
+                return;
+            }
+            //set to only work for administrators, but ig that shit isn't gonna work lmfao
+             if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
+                msg.channel.send({files: [{ attachment: "logs.txt" }]});
+                ess.timeAndUInfoLog(ess, msg, console);
+            }
+        } 
 
     } catch(err) {
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
