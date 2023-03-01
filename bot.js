@@ -69,7 +69,7 @@ client.on("messageCreate", async (msg) => {
         }
 
         if (msg.content.toLowerCase().startsWith('~help')) {
-            msg.reply("__**All Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.\n`~ping` - Developer Command to see how much latency there is\n`~whopper` - shitpost whopper meme\n `~kidnap`- kidnaps you cutely (SATIRE) \n `~shibe`  - gets you shibe pics \n `~cat` - gets you kitty cat pics \n `~bird` - gets you birdie pictures \n `~eval [code]` - evaluate math expression \n `~trace [height] [width] [code] `- Render image from code\n `~animate [height] [width] [frames] [code]` - animate render from code \n `~bytebeat [samplerate] [duration] [code]` - Render audio from code \n `~gpt [query]` - queries ChatGPT");
+            msg.reply("__**All Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.\n`~ping` - Developer Command to see how much latency there is\n`~whopper` - shitpost whopper meme\n `~kidnap`- kidnaps you cutely (SATIRE) \n `~shibe`  - gets you shibe pics \n `~cat` - gets you kitty cat pics \n `~bird` - gets you birdie pictures \n `~ship` - Randomly generates a ship name for two users and how well it would work. \n `~coinflip` - flips a coin \n `~rps` - Play rock-paper-scissors against the bot. \n \n __**In the works!**__ \n`~eval [code]` - evaluate math expression \n `~trace [height] [width] [code] `- Render image from code\n `~animate [height] [width] [frames] [code]` - animate render from code \n `~bytebeat [samplerate] [duration] [code]` - Render audio from code \n `~gpt [query]` - queries ChatGPT \n `~nws` - Queries the National Weather Service \n `~spc` - Give Storm Prediction Center's Models, meant to be used with `~nws` \n `~music [play/stop/skip]` - plays music from either youtube, spotify, or soundcloud hopefully.. \n ***Fuuga*** *is made with love from Fluffery, LuxSemper, and Kouzerumatsu*");
         }
 
         if (msg.content.toLocaleLowerCase().startsWith('~valentine ')) {
@@ -98,22 +98,11 @@ client.on("messageCreate", async (msg) => {
         }
         if (msg.content.toLowerCase().startsWith('~sex')) {
             const tm = setTimeout(function() { msg.reply({content: "Sexing - Please Wait..."}); }, 10);
-            if (msg.mentions.members.first()) {
-                if (msg.mentions.members.at(1)) {
-                    if (msg.mentions.members.at(1).id.toString() === "422438661993529364") {
-                        const tm3 = setTimeout(function() { 
-                            if (!msg) { return;
-                             } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat(((Math.floor(Math.random() * 52)-1)+55).toString().concat("%`\n(Ejaculation Within `".concat(((Math.floor(Math.random() * 25))+30).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
-                    } else {
-                        const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
-                    }
-                } else {
-                    console.log("Sorta Legit Version");
-                    const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
-                }
-            } else {
-                const tm2 = setTimeout(function() { if (!msg) { return; } msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000); 
-        }
+            const tm2 = setTimeout(function() { 
+                if (!msg) { return; 
+                } 
+                msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
+
         if (msg.content.toLowerCase().startsWith('~shop')) {
             const splt = msg.content.split(" ");
             const pages = [ess.shopItemsString(ess, 0, msg), ess.shopItemsString(ess, 1, msg), ess.shopItemsString(ess, 2, msg)];
@@ -280,60 +269,121 @@ client.on("messageCreate", async (msg) => {
           }       
           
           if (msg.content.includes('~uwu')) {
-            if (message.content.match(/[lr]/gi)) {
-                const modifiedContent = message.content.replace(/[lr]/gi, 'w');
-                message.channel.send(`${modifiedContent}`);
+            if (msg.content.match(/[lr]/gi)) {
+                const modifiedContent = msg.content.replace(/[lr]/gi, 'w');
+                msg.channel.send(`${modifiedContent}`);
               }}
-
-              if (msg.content.startsWith.toLowerCase()('~music'))
-              if (splt[1] == "play") {
-                const connection = voice.joinVoiceChannel({ channelId: msg.member.voice.channelId, guildId: msg.guildId, adapterCreator: msg.guild.voiceAdapterCreator});
-                if (!voiceChannel) return msg.reply('Please join a voice channel first!');
-            
-                const song = msg.content.split(' ').slice(1).join(' ');
-            
-                if (!dispatcher) {
-
-                  voiceChannel.join().then(connection => {
-                    queue.push(song);
-                    playSong(connection, msg);
-                  });
-                } else {
-                  queue.push(song);
-                  msg.reply('Song added to the queue!');
-                }
+        
+         if (msg.content.toLocaleLowerCase().startsWith('~coinflip')) {
+            const sides = ['Heads', 'Tails'];
+            const result = sides[Math.floor(Math.random() * sides.length)];
+            msg.reply(`The coin landed on **${result}**!`);
+         }   
+         
+         if (msg.content.toLocaleLowerCase().startsWith('~ship')) {
+            const user1 = msg.mentions.users.first();
+              const user2 = msg.mentions.users.last();
+              
+              // If either user is missing, return an error message
+              if (!user1 || !user2) {
+                return msg.reply('Please mention two users to ship!');
               }
-              if (splt[1] == "stop") {
-                const connection = voice.joinVoiceChannel({ channelId: msg.member.voice.channelId, guildId: msg.guildId, adapterCreator: msg.guild.voiceAdapterCreator});
-                if (!voiceChannel) return msg.reply('Please join a voice channel first!');
+              
+              // Generate a random ship name by combining the first half of the first user's name with the second half of the second user's name
+              const shipName = user1.username.slice(0, user1.username.length / 2) + user2.username.slice(user2.username.length / 2);
+              
+              // Return the ship name in a message
+              msg.reply(`<333 **${user1.username}** x **${user2.username}** = **${shipName}** <333`);
+            }
+        
+            if (msg.content.toLocaleLowerCase().startsWith('~rps')) {
+                  const choices = ['rock', 'paper', 'scissors'];
+                  
+                  // Get the user's choice (either 'rock', 'paper', or 'scissors')
+                  const userChoice = args[0];
+                  
+                  // If the user did not provide a valid choice, return an error message
+                  if (!choices.includes(userChoice)) {
+                    return msg.reply('Please choose either rock, paper, or scissors!');
+                  }
+                  
+                  // Randomly select the bot's choice
+                  const botChoice = choices[Math.floor(Math.random() * choices.length)];
+                  
+                  // Determine the winner based on the user's choice and the bot's choice
+                  let result;
+                  if (userChoice === botChoice) {
+                    result = 'It\'s a tie!';
+                  } else if (
+                    (userChoice === 'rock' && botChoice === 'scissors') ||
+                    (userChoice === 'paper' && botChoice === 'rock') ||
+                    (userChoice === 'scissors' && botChoice === 'paper')
+                  ) {
+                    result = 'You win!';
+                  } else {
+                    result = 'You lose!';
+                  }
+                  
+                  // Return the result in a message
+                  msg.reply(`You chose **${userChoice}**, and I chose **${botChoice}**. ${result}`);
+                };
+
+// WIP
+            //  if (msg.content.toLowerCase().startsWith('~music')) {
+            //    
+            //    const resource = voice.createAudioResource('./track.mp3');
+            //    const player = voice.createAudioPlayer();
+            //    const subscription = connection.subscribe(player);
+            //    var connection = voice.joinVoiceChannel({ channelId: msg.member.voice.channelId, guildId: msg.guildId, adapterCreator: msg.guild.voiceAdapterCreator}) == null ;
+
+            //    const splt = msg.content.split(" ");
+            //        if (splt[1] == "play") {
+            //            voice.joinVoiceChannel
+            //            if (voiceChannel) return msg.reply('Please join a voice channel first!');
+            //
+            //    const song = msg.content.split(' ').slice(1).join(' ');
+            //
+            //    if (!dispatcher) {
+
+            //      voiceChannel.join().then(connection => {
+            //        queue.push(song);
+            //        playSong(connection, msg);
+            //      });
+            //    } else {
+            //      queue.push(song);
+            //      msg.reply('Song added to the queue!');
+            //    }
+            // }
+            //  if (splt[1] == "stop") {
+            //    if (!voiceChannel) return msg.reply('Please join a voice channel first!');
             
-                queue = [];
-                dispatcher.end();
-                voiceChannel.leave();
-              };
+            //    queue = [];
+            //    player.stop.subscription.unsubcribe;
+            //    voiceChannel.leave();
+            //  };
 
-              if (splt[1] == '!skip') {
-                if (!dispatcher) return msg.reply('Nothing is playing to skip.');
-                dispatcher.end();
-              }
+            //  if (splt[1] == 'skip') {
+            //    if (!dispatcher) return msg.reply('Nothing is playing to skip.');
+            //    dispatcher.end();
+            //  }
 
-            function playSong(connection, msg) {
-                if (!queue.length) {
-                 msg.reply('All songs have been played. Queue is empty!');
-                  connection.disconnect();
-                  return;
-                }
+            //function playSong(connection, msg) {
+            //    if (!queue.length) {
+            //     msg.reply('All songs have been played. Queue is empty!');
+            //      connection.disconnect();
+            //      return;
+            //    }
   
-            const stream = ytdl(queue.shift(), { filter: 'audioonly' });
-                dispatcher = connection.play(stream);
+            //const stream = ytdl(queue.shift(), { filter: 'audioonly' });
+            //    dispatcher = connection.play(stream);
   
-                dispatcher.on('finish', () => playSong(connection, msg));
-              }
+            //    dispatcher.on('finish', () => playSong(connection, msg));
+            //  }}
           
-            const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
-            console.log(logData);
+            //const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
+           // console.log(logData);
 
-            if (msg.content.startsWith('~bytebeat')) {
+            if (msg.content.startsWith('~bytebeat')) {{
               const args = msg.content.split(' ');
               const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
               const duration = parseFloat(args[2]) || DEFAULT_DURATION;
@@ -366,6 +416,7 @@ client.on("messageCreate", async (msg) => {
                   return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
                }
               });
+            } 
 
         if (msg.content.startsWith('~vote')) {
             if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator) != client.user.id) {
