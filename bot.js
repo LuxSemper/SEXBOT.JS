@@ -297,12 +297,12 @@ client.on("messageCreate", async (msg) => {
                 dispatcher.end();
                 voiceChannel.leave();
               };
-            }
 
-              if (splt[1] == '!skip') {
+              if (splt[1] == 'skip') {
                 if (!dispatcher) return msg.reply('Nothing is playing to skip.');
                 dispatcher.end();
               }
+            }
 
             function playSong(connection, msg) {
                 if (!queue.length) {
