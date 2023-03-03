@@ -99,7 +99,8 @@ client.on("messageCreate", async (msg) => {
         if (msg.content.toLowerCase().startsWith('~sex')) {
             const tm = setTimeout(function() { msg.reply({content: "Sexing - Please Wait..."}); }, 10);
             const tm2 = setTimeout(function() { 
-                if (!msg) { return; 
+                if (!msg) { 
+                    return; 
                 } 
                 msg.reply({content: "Sex Complete - Average Sexiness Level: `".concat((Math.floor(Math.random() * 102)-1).toString().concat("%`\n(Ejaculation Within `".concat((Math.floor(Math.random() * 25)).toString().concat(".".concat((Math.floor(Math.random() * 99)).toString().concat("` Seconds )"))))))}); }, 3000);
 //issue starts here
