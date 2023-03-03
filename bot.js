@@ -268,7 +268,7 @@ client.on("messageCreate", async (msg) => {
             }
           }       
           
-          if (msg.content.includes('~uwu')) {
+          if (msg.content.toLocaleLowerCase().startsWith('~uwu')) {
             if (msg.content.match(/[lr]/gi)) {
                 const modifiedContent = msg.content.replace(/[lr]/gi, 'w');
                 msg.channel.send(`${modifiedContent}`);
@@ -276,8 +276,7 @@ client.on("messageCreate", async (msg) => {
         
          if (msg.content.toLocaleLowerCase().startsWith('~coinflip')) {
             const sides = ['Heads', 'Tails'];
-            const result = sides[Math.floor(Math.random() * sides.length)];
-            msg.reply(`The coin landed on **${result}**!`);
+            msg.reply(`The coin landed on **${math.floor(Math.random() * sides.length)}**!`);
          }   
          
          if (msg.content.toLocaleLowerCase().startsWith('~ship')) {
@@ -285,24 +284,23 @@ client.on("messageCreate", async (msg) => {
          }
         
             if (msg.content.toLocaleLowerCase().startsWith('~rps')) {
-                  const choices = ['rock', 'paper', 'scissors'];
-                  
+                const choices = ['rock', 'paper', 'scissors'];
                   // Get the user's choice (either 'rock', 'paper', or 'scissors')
-                  const userChoice = args[0];
+                const userChoice = args[0];
                   
                   // If the user did not provide a valid choice, return an error message
-                  if (!choices.includes(userChoice)) {
+                if (!choices.includes(userChoice)) {
                     return msg.reply('Please choose either rock, paper, or scissors!');
-                  }
+                }
                   
                   // Randomly select the bot's choice
-                  const botChoice = choices[Math.floor(Math.random() * choices.length)];
+                const botChoice = choices[Math.floor(Math.random() * choices.length)];
                   
                   // Determine the winner based on the user's choice and the bot's choice
-                  let result;
-                  if (userChoice === botChoice) {
-                    result = 'It\'s a tie!';
-                  } else if (
+                let result;
+                    if (userChoice === botChoice) {
+                result = 'It\'s a tie!';
+                } else if (
                     (userChoice === 'rock' && botChoice === 'scissors') ||
                     (userChoice === 'paper' && botChoice === 'rock') ||
                     (userChoice === 'scissors' && botChoice === 'paper')
@@ -371,7 +369,7 @@ client.on("messageCreate", async (msg) => {
             //const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
            // console.log(logData);
 
-            if (msg.content.startsWith('~bytebeat')) {{
+            if (msg.content.startsWith('~bytebeat')) {
               const args = msg.content.split(' ');
               const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
               const duration = parseFloat(args[2]) || DEFAULT_DURATION;
@@ -475,7 +473,7 @@ client.on("messageCreate", async (msg) => {
             }
         } 
 
-    }} catch(err) {
+    } catch(err) {
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
         console.log(err);
         //this shit's supposed to run when the bot crashes or whatever: did I remember all failsafes?
