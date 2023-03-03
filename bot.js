@@ -427,6 +427,7 @@ client.on("messageCreate", async (msg) => {
                     );
                 }
             }}
+            const splt = msg.content.split(" ");
             if ((splt[1]) == "ban") {
                 var initLogData = ess.timeAndUInfoLog(ess, msg, console);
                 fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
