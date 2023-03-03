@@ -369,23 +369,25 @@ client.on("messageCreate", async (msg) => {
             //const logData = `[${new Date().toISOString()}] ${message.author.username}#${message.author.discriminator} (${message.author.id}) played ${source} in ${voiceChannel.name} (${voiceChannel.id})\n`;
            // console.log(logData);
 
-            if (msg.content.startsWith('~bytebeat')) {
-              const args = msg.content.split(' ');
-              const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
-              const duration = parseFloat(args[2]) || DEFAULT_DURATION;
-              const code = args.slice(3).join(' ');
-
-              if (isNaN(sampleRate) || isNaN(duration) || !code) {
-                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
-              }
-
-              const audioFilePath = './audio/btb.wav';
-              exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
-                if (error || stderr) {
-                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
-               }
-              });
+           if (msg.content.startsWith('~bytebeat')) {
+            const args = msg.content.split(' ');
+            const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
+            const duration = parseFloat(args[2]) || DEFAULT_DURATION;
+            const code = args.slice(3).join(' ');
+          
+            if (isNaN(sampleRate) || isNaN(duration) || !code) {
+              msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+              return;
             }
+          
+            const audioFilePath = './audio/btb.wav';
+            exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
+              if (error || stderr) {
+                msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
+                return;
+              }
+            });
+          }
 
               const args = msg.content.split(' ');
               const sampleRate = parseInt(args[1]) || DEFAULT_SAMPLE_RATE;
