@@ -291,7 +291,8 @@ client.on("messageCreate", async (msg) => {
                   
                   // If the user did not provide a valid choice, return an error message
                 if (!choices.includes(userChoice)) {
-                    return msg.reply('Please choose either rock, paper, or scissors!');
+                    msg.reply('Please choose either rock, paper, or scissors!');
+                    return;
                 }
                   
                   // Randomly select the bot's choice
@@ -326,7 +327,8 @@ client.on("messageCreate", async (msg) => {
             //    const splt = msg.content.split(" ");
             //        if (splt[1] == "play") {
             //            voice.joinVoiceChannel
-            //            if (voiceChannel) return msg.reply('Please join a voice channel first!');
+            //            if (voiceChannel) msg.reply('Please join a voice channel first!');
+            //                return;
             //
             //    const song = msg.content.split(' ').slice(1).join(' ');
             //
@@ -342,15 +344,17 @@ client.on("messageCreate", async (msg) => {
             //    }
             // }
             //  if (splt[1] == "stop") {
-            //    if (!voiceChannel) return msg.reply('Please join a voice channel first!');
-            
+            //    if (!voiceChannel)  msg.reply('Please join a voice channel first!');
+            //          return;
+
             //    queue = [];
             //    player.stop.subscription.unsubcribe;
             //    voiceChannel.leave();
             //  };
 
             //  if (splt[1] == 'skip') {
-            //    if (!dispatcher) return msg.reply('Nothing is playing to skip.');
+            //    if (!dispatcher) msg.reply('Nothing is playing to skip.');
+            //          return;       
             //    dispatcher.end();
             //  }
 
@@ -396,13 +400,15 @@ client.on("messageCreate", async (msg) => {
               const code = args.slice(3).join(' ');
 
               if (isNaN(sampleRate) || isNaN(duration) || !code) {
-                return msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+                msg.reply('Please provide a valid bytebeat code, sample rate and duration!');
+                    return;
               }
 
               const audioFilePath = './audio/btb.wav';
               exec(`bytebeat ${sampleRate} ${duration} ${code} > ${audioFilePath}`, (error, stdout, stderr) => {  
                 if (error || stderr) {
-                  return msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
+                  msg.reply('An error occurred while generating the audio file. `Error: ${error ? error.message : stderr}`');
+                  return;
                }
               });
             } 
@@ -422,7 +428,9 @@ client.on("messageCreate", async (msg) => {
                     resp.react("✅");
                     const tm = setTimeout(
                         function() {
-                            if (!resp) { return; }
+                            if (!resp) { 
+                                return; 
+                            }
                             if (Math.floor(msg.guild.memberCount*(2/3)) <= msg.reactions.cache.size-1) {
                                 msg.guild.members.kick(candite);
                             }
@@ -440,7 +448,9 @@ client.on("messageCreate", async (msg) => {
                     resp.react("✅");
                     const tm = setTimeout(
                         function() {
-                            if (!resp) { return; }
+                            if (!resp) { 
+                                return; 
+                            }
                             if (Math.floor(msg.guild.memberCount*(2/3)) <= msg.reactions.cache.size-1) {
                                 msg.guild.members.ban(candite);
                             }
@@ -478,7 +488,9 @@ client.on("messageCreate", async (msg) => {
         } 
 
     } catch(err) {
-        if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
+        if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { 
+            return; 
+        }
         console.log(err);
         //this shit's supposed to run when the bot crashes or whatever: did I remember all failsafes?
         ess.crash(client);
