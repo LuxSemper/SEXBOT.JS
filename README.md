@@ -15,5 +15,3 @@
 modlogs in a channel
 
 warn
-
-giveaway [pause/end/start]
