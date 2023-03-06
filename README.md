@@ -1,7 +1,5 @@
 # Improvised Virtual Private Server Nuclear Warhead
 
-### This is the Stable Branch to see the testing to go https://github.com/flufferyomada/fuuga
-
 ![](images/fuuga.png) Also named Fuuga :3
 
 # todo
