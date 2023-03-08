@@ -16,6 +16,22 @@ const {
     createAudioResource
   } = require('@discordjs/voice');
 
+const ytdl = require('ytdl-core');
+const { Client } = require('discord.js');
+const soundcloud = require('soundcloud-downloader').default;
+const spotifyUri = require('spotify-uri');
+
+//weather gonna change
+const wfoUrl = 'https://api.weather.gov/products/types/WFO/locations/{location}/issues/latest';
+const spcUrl = 'https://api.weather.gov/products/types/SPC/locations/{location}/issues/latest';
+const radarUrl = 'https://radar.weather.gov/ridge/lite/{id}_loop.gif';
+const alertsUrl = 'https://www.weather.gov/images/hazards/';
+
+//OpenAI ChatGPT
+const openai = require('openai');
+const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
+openai.apiKey = openaiApiKey;
+
 let dispatcher;
 let queue = [];
 const { exec } = require('child_process');
@@ -86,7 +102,7 @@ client.on("messageCreate", async (msg) => {
                     );
                 }
             }}
-            
+
             if ((splt[1]) == "ban") {
                 var initLogData = ess.timeAndUInfoLog(ess, msg, console);
                 fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
@@ -153,9 +169,6 @@ client.on("messageCreate", async (msg) => {
           }
 
           if (msg.content.toLowerCase().startsWith('~jobs')) {
-            //used a single if statement with a range check to avoid repeating the same if structure multiple times
-            //string interpolation to simplify the construction of the reply
-            //parseInt() to convert the page number string to an integer, and combined it with the range check
             const splt = msg.content.split(" ");
             const pages = [ess.jobsString(ess, 0, msg), ess.jobsString(ess, 1, msg)];
             const pageNumber = parseInt(splt[1]);
@@ -266,6 +279,12 @@ client.on("messageCreate", async (msg) => {
             msg.reply("<333 <@"+msg.author.id+"> x <@"+msg.mentions.users.first().id+"> : "+(Math.floor(Math.random()*102)-1)+"% match.");
          }
         
+         if (msg.content.includes('~uwu')) {
+            if (msg.content.match(/[lr]/gi)) {
+                const modifiedContent = msg.content.replace(/[lr]/gi, 'w');
+                msg.channel.send(`${modifiedContent}`);
+              }}
+
             if (msg.content.toLocaleLowerCase().startsWith('~rps')) {
                 const choices = ['rock', 'paper', 'scissors'];
                   // Get the user's choice (either 'rock', 'paper', or 'scissors')
@@ -336,6 +355,18 @@ client.on("messageCreate", async (msg) => {
               msg.reply('>///< Oops! Something went wrong while getting your birb');
             }
           }       
+
+            if (msg.content.startsWith("~logfile")) {
+            if (msg.guild.ownerId != client.user.id) {
+                msg.reply(">///< - Hiroshima just occured at my house, Report this issue to Fluffery");
+                return;
+            }
+            //set to only work for administrators, but ig that shit isn't gonna work lmfao
+            if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator)) {
+                msg.channel.send({files: [{ attachment: "logs.txt" }]});
+                ess.timeAndUInfoLog(ess, msg, console);
+            }
+        } 
 
     } catch (err) { //failsafe and log
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
