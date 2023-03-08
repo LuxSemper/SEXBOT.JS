@@ -15,15 +15,6 @@ const {
     createAudioPlayer,
     createAudioResource
   } = require('@discordjs/voice');
-const ytdl = require('ytdl-core');
-const { Client } = require('discord.js');
-const soundcloud = require('soundcloud-downloader').default;
-const spotifyUri = require('spotify-uri');
-//weather
-const wfoUrl = 'https://api.weather.gov/products/types/WFO/locations/{location}/issues/latest';
-const spcUrl = 'https://api.weather.gov/products/types/SPC/locations/{location}/issues/latest';
-const radarUrl = 'https://radar.weather.gov/ridge/lite/{id}_loop.gif';
-const alertsUrl = 'https://www.weather.gov/images/hazards/';
 
 let dispatcher;
 let queue = [];
