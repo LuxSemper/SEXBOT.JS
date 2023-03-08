@@ -24,10 +24,7 @@ const wfoUrl = 'https://api.weather.gov/products/types/WFO/locations/{location}/
 const spcUrl = 'https://api.weather.gov/products/types/SPC/locations/{location}/issues/latest';
 const radarUrl = 'https://radar.weather.gov/ridge/lite/{id}_loop.gif';
 const alertsUrl = 'https://www.weather.gov/images/hazards/';
-//OpenAI ChatGPT
-const openai = require('openai');
-const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
-openai.apiKey = openaiApiKey;
+
 let dispatcher;
 let queue = [];
 const { exec } = require('child_process');
@@ -75,6 +72,48 @@ client.on("messageCreate", async (msg) => {
             return;
         }
 
+        if (msg.content.startsWith('~vote')) {
+            if (msg.member.permissions.has(Discord.PermissionsBitField.Flags.Administrator) != client.user.id) {
+                msg.reply(">///< Nagasaki just happened where I live. Bot is not the owner of the server therefore the command doesnt work");
+                return;
+            }
+            const splt = msg.content.split(" ");
+            if ((splt[1]) == "kick") {
+                var initLogData = ess.timeAndUInfoLog(ess, msg, console);
+                fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
+                if (msg.mentions.everyone == false && msg.mentions.users.first()) {
+                    const candite = msg.mentions.users.first();
+                    var resp = await msg.channel.send({content:"@everyone\n__**Kick Member Vote**__\n \n<@"+msg.author.id+"> has called a vote to kick <@"+msg.mentions.users.first().id+">\n \nTo vote `Yes`, react with :white_check_mark:\nOtherwise, do not vote. If 2/3 of the server chooses `Yes`, the user will be kicked.\nIf that number is not reached within 6 hours, the vote will be cancelled.",fetchReply:true});
+                    resp.react("✅");
+                    const tm = setTimeout(
+                        function() {
+                            if (!resp) { return; }
+                            if (Math.floor(msg.guild.memberCount*(2/3)) <= msg.reactions.cache.size-1) {
+                                msg.guild.members.kick(candite);
+                            }
+                        }, 21600000
+                    );
+                }
+            }}
+            
+            if ((splt[1]) == "ban") {
+                var initLogData = ess.timeAndUInfoLog(ess, msg, console);
+                fs.appendFile("logs.txt", initLogData, (err) => { if (err) throw err; console.log("Logged Data"); });
+                if (msg.mentions.everyone == false && msg.mentions.users.first()) {
+                    const candite = msg.mentions.users.first();
+                    var resp = await msg.channel.send({content:"@everyone\n__**Ban Member Vote**__\n \n<@"+msg.author.id+"> has called a vote to ban <@"+msg.mentions.users.first().id+">\n \nTo vote `Yes`, react with :white_check_mark:\nOtherwise, do not vote. If 2/3 of the server chooses `Yes`, the user will be banned.\nIf that number is not reached within 6 hours, the vote will be cancelled.",fetchReply:true});
+                    resp.react("✅");
+                    const tm = setTimeout(
+                        function() {
+                            if (!resp) { return; }
+                            if (Math.floor(msg.guild.memberCount*(2/3)) <= msg.reactions.cache.size-1) {
+                                msg.guild.members.ban(candite);
+                            }
+                        }, 21600000
+                    );
+                }
+            }
+
         if (msg.content.toLowerCase().startsWith('~valentine')) {
         const cmd = msg.content.toLowerCase().substring(11).trim();
         const usr = msg.mentions.users.first() || msg.author;
@@ -99,7 +138,10 @@ client.on("messageCreate", async (msg) => {
         }
 
         if (msg.content.toLowerCase().startsWith('~sex')) {
-            const tm = setTimeout(function() { msg.reply({content: "Sexing - Please Wait..."}); }, 10);
+            const tm = setTimeout(function() { 
+                msg.reply({content: "Sexing - Please Wait..."}); 
+                }, 10
+            );
             const tm2 = setTimeout(function() { 
                 if (!msg) { 
                     return; 
@@ -131,6 +173,7 @@ client.on("messageCreate", async (msg) => {
             } else {
               msg.reply("Konnichiwa! Please use an integer (1-2) to select a job page.");
             }
+            return;
           }
 
           if (msg.content.toLowerCase().startsWith('~buy ')) {
@@ -155,6 +198,65 @@ client.on("messageCreate", async (msg) => {
               msg.reply(ssm);
             }
           }
+
+          if (msg.content.toLowerCase().startsWith('~job ')) {
+            const splt = msg.content.split(" ");
+            if (splt[1] == "apply") {
+                ess.jobApply(msg.author.id, parseInt(splt[2]), parseInt(splt[3]), msg);
+            }
+            if (splt[1] == "quit") {
+                ess.jobQuit(msg.author.id, msg);
+            }
+            if (splt[1] == "work") {
+                ess.workJob(msg.author.id, msg);
+            }
+            if (splt[1] == "current") {
+                var jb = ess.getUdata(msg.author.id).job;
+                if (jb) {
+                    jb = jb.name;
+                } else {
+                    jb = "None";
+                }
+                msg.reply("Current job: "+jb);
+            }
+        }
+
+        if (msg.content.toLowerCase().startsWith('~balance')) {
+            const usr = msg.mentions.users.first();
+            if (usr) {
+                const mon = ess.getBal(usr.id, msg);
+                if (!mon) {
+                    return;
+                }
+                msg.reply("User <@"+usr.id+"> has $"+mon);
+                console.log("Balance got "+usr.id);
+            } else {
+                const mon = ess.getBal(msg.author.id, msg);
+                if (!mon) {
+                    return;
+                }
+                msg.reply("User <@"+msg.author.id+"> has $"+mon);
+                console.log("Balance got "+msg.author.id);
+            }
+        }
+        if (msg.content.toLowerCase().startsWith('~xp')) {
+            const usr = msg.mentions.users.first();
+            if (usr) {
+                const mon = ess.getXP(usr.id, msg);
+                if (!mon) {
+                    return;
+                }
+                msg.reply("User <@"+usr.id+"> has "+mon+" XP");
+                console.log("XP got "+usr.id);
+            } else {
+                const mon = ess.getXP(msg.author.id, msg);
+                if (!mon) {
+                    return;
+                }
+                msg.reply("User <@"+msg.author.id+"> has "+mon+" XP");
+                console.log("XP got "+msg.author.id);
+            }
+        }
 
         if (msg.content.toLocaleLowerCase().startsWith(`~whopper`)) {
             msg.reply("https://cdn.discordapp.com/attachments/669796626784714756/1074666197611716699/TWD.mp4");
