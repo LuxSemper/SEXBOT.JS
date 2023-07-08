@@ -9,28 +9,6 @@ const { join } = require("node:path");
 const { allowedNodeEnvironmentFlags } = require("process");
 const { request } = require('http');
 const xml = require("xmlhttprequest");
-//for the play command
-const {
-    joinVoiceChannel,
-    createAudioPlayer,
-    createAudioResource
-  } = require('@discordjs/voice');
-
-//const ytdl = require('ytdl-core');
-
-//const soundcloud = require('soundcloud-downloader').default;
-//const spotifyUri = require('spotify-uri');
-
-//weather gonna change
-//const wfoUrl = 'https://api.weather.gov/products/types/WFO/locations/{location}/issues/latest';
-//const spcUrl = 'https://api.weather.gov/products/types/SPC/locations/{location}/issues/latest';
-//const radarUrl = 'https://radar.weather.gov/ridge/lite/{id}_loop.gif';
-//const alertsUrl = 'https://www.weather.gov/images/hazards/';
-
-//OpenAI ChatGPT
-//const openai = require('openai');
-//const openaiApiKey = process.env.OPENAI_API_KEY; // Replace with your actual API key
-//openai.apiKey = openaiApiKey;
 
 let dispatcher;
 let queue = [];
@@ -41,7 +19,8 @@ const mainDate = new Date();
 
 //const botIntent = new Discord.Intents();
 //prolly old api i forgor why remove
-
+var botIntent = [];
+//botIntent.add(Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS, Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_MESSAGE_TYPING, Discord.Intents.FLAGS.DIRECT_MESSAGES, Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Discord.Intents.FLAGS.DIRECT_MESSAGE_TYPING);
 botIntent.push(Discord.IntentsBitField.Flags.GuildBans, Discord.IntentsBitField.Flags.GuildMessages, Discord.IntentsBitField.Flags.GuildMembers, Discord.IntentsBitField.Flags.GuildPresences, Discord.IntentsBitField.Flags.Guilds, Discord.IntentsBitField.Flags.MessageContent, Discord.IntentsBitField.Flags.GuildMessageTyping, Discord.IntentsBitField.Flags.GuildIntegrations, Discord.IntentsBitField.Flags.Guilds);
 const client = new Discord.Client({ intents: botIntent });
 
@@ -71,8 +50,29 @@ client.on("messageCreate", async (msg) => {
         }
 
         if (msg.content.toLowerCase().startsWith('~help')) {
-            msg.reply("__**All Commands**__\n \n`~balance [@user:optional]` - Returns balance of user or mention.\n`~buy [page:int] [item:int]` - Purchases the item with the position on the given page.\n`~info [(job/item)] [page:int] [obj:int]` - Gets information about the object on the given page of the given category.\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n`~jobs [page:int]` - Shows the given page in the job listing.\n`~sex [target:any]` - Sexes the target.\n`~shop [page:int]` - Shows the given page in the shop.\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot is the owner.\n`~logfile` - Uploads the logs file. Only available in servers where the bot is the owner.\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine.\n`~xp [target:@user]` - Gets the XP of the user or mention.\n`~ping` - Developer Command to see how much latency there is\n`~whopper` - shitpost whopper meme\n `~kidnap`- kidnaps you cutely (SATIRE) \n `~shibe`  - gets you shibe pics \n `~cat` - gets you kitty cat pics \n `~bird` - gets you birdie pictures \n `~eval [code]` - evaluate math expression \n `~trace [height] [width] [code] `- Render image from code\n `~animate [height] [width] [frames] [code]` - animate render from code \n `~bytebeat [samplerate] [duration] [code]` - Render audio from code \n `~gpt [query]` - queries ChatGPT");
-        }
+          if (msg.content.startsWith("~help")) {
+            msg.reply("**Commands:**" +
+            "\n\n`~help` - This command replies with this message." + 
+            "\n`~shibe` Gets you shibe pics " +
+            "\n`~cat` Gets you kitty cade pictures " +
+            "\n`~bird` gets you birdie pictures" +
+            "\n`~valentine [(ask/get/del)] (ask){[target:@user]}` - Asks, gets, or removes a valentine." +
+            "\n`~sex` uhh sexes.. the user..." +
+            "\n`~vote [(kick/ban)]` - Initiates vote for option. Only available in servers where the bot has admin.\n" +
+            "\n **Shop Mingame Commands**" +
+            "\n\`~balance [@user:optional]\` Returns balance of user or mention.\n" +
+            "\n~buy [page:int] [item:int]\` - Purchases the item with the position on the given page." +
+            "\n`~info [(job/item)] [page:int] [obj:int]` Gets information about the object on the given page of the given category.\n" + 
+            "\n`~job [(work/apply/quit/current)] (apply){[page:int] [job:int]}` - Applies for, leaves, or works at a job. Work provides money and XP. Current displays job name.\n" +
+            "\n`~jobs [page:int]\` Shows the given page in the job listing.\n" + 
+            "\n `~shop [page:int]\` Shows the given page in the shop.\n" +
+            "\n`~xp [target:@user]\` - Gets the XP of the user or mention.\n" +
+            "\n**Developer Debug Tools**" +
+            "\n`~logfile`\* This will return a file of ALL logged commands. Over time, this file will get " + 
+            "larger, and its contents may be moved." + 
+            "\n`~ping` checks the latency between the bot and the user");
+
+          }
 
         if (msg.content.toLocaleLowerCase().startsWith(`~ping`)) {
             msg.reply(`Pong! **(${Date.now() - msg.createdTimestamp}ms)**`)
@@ -262,14 +262,6 @@ client.on("messageCreate", async (msg) => {
             }
         }
 
-        if (msg.content.toLocaleLowerCase().startsWith(`~whopper`)) {
-            msg.reply("https://cdn.discordapp.com/attachments/669796626784714756/1074666197611716699/TWD.mp4");
-            return;
-        }
-        if (msg.content.toLowerCase().startsWith('~kidnap')) {
-            msg.reply('https://cdn.discordapp.com/attachments/723599467172986962/1074336826464145589/trim.90D66A28-3AA2-4D37-A744-A6FD591DA6F0.mov');
-            return;
-        }
         if (msg.content.toLowerCase().startsWith('~coinflip')) {
             msg.reply(`:moneybag: It landed on **${Math.random() >= 0.5 ? 'heads' : 'tails'}**!`);
             return;
@@ -278,12 +270,6 @@ client.on("messageCreate", async (msg) => {
         if (msg.content.toLocaleLowerCase().startsWith('~ship')) {
             msg.reply("<333 <@"+msg.author.id+"> x <@"+msg.mentions.users.first().id+"> : "+(Math.floor(Math.random()*102)-1)+"% match.");
          }
-        
-         if (msg.content.includes('~uwu')) {
-            if (msg.content.match(/[lr]/gi)) {
-                const modifiedContent = msg.content.replace(/[lr]/gi, 'w');
-                msg.channel.send(`${modifiedContent}`);
-              }}
 
             if (msg.content.toLocaleLowerCase().startsWith('~rps')) {
                 const choices = ['rock', 'paper', 'scissors'];
@@ -368,11 +354,11 @@ client.on("messageCreate", async (msg) => {
             }
         } 
 
-    } catch (err) { //failsafe and log
+      } catch (error) {
         if (err.toString().match("ReferenceError: ess") || err.toString().match("ReferenceError: initLogData")) { return; }
-        console.log(err);
-        ess.log(client);
+        console.err;
+        ess.crash(client);
     }
-});
+}});
 
 client.login(ess.sets.token);
