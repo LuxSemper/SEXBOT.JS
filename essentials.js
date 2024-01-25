@@ -5,7 +5,7 @@ const ess = exports;
 
 exports.sets = {
     untouchable: ["1009101322680795268", "919666443988119563"],
-    token: "MTAwMDk2NjM2OTA3Mzk2MzAzOA.Gz6OoL.ZhZq6pegBLcPa1ACVWpbrjIUfRzpV8xyHBRW7g"
+    token: "insert-your-own"
 }
 
 exports.crash = function(client) {
